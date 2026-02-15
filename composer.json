@@ -1,0 +1,17 @@
+{
+  "name": "anesconsulta/site",
+  "description": "Site de agendamento pré-anestésico",
+  "type": "project",
+  "require": {
+    "php": ">=8.0",
+    "phpmailer/phpmailer": "^6.9"
+  },
+  "autoload": {
+    "psr-4": {
+      "AnesConsulta\\": "src/"
+    }
+  },
+  "config": {
+    "optimize-autoloader": true
+  }
+}

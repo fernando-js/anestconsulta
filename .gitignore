@@ -1,0 +1,28 @@
+# ══════════════════════════════
+# AnesConsulta — .gitignore
+# ══════════════════════════════
+
+# ⚠️ NUNCA subir config.php (contém senhas!)
+php/config.php
+
+# Dependências do Composer
+vendor/
+composer.lock
+
+# Logs e cache
+*.log
+*.cache
+error_log
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Uploads de pacientes (privacidade LGPD)
+uploads/

@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AnesConsulta — Avaliação Pré-Anestésica</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal-900: #003d3b;
+    --teal-800: #005451;
+    --teal-700: #006e6a;
+    --teal-600: #008c87;
+    --teal-500: #00a89f;
+    --teal-400: #00c4ba;
+    --teal-300: #33d0c7;
+    --teal-200: #80e3de;
+    --teal-100: #b3eee9;
+    --teal-50:  #e6faf9;
+    --blue-900: #001a3a;
+    --blue-800: #002f6c;
+    --blue-700: #003f9c;
+    --blue-600: #0050b3;
+    --blue-500: #1a6fc4;
+    --blue-400: #3d8de0;
+    --blue-300: #6aaff5;
+    --blue-200: #9bcbff;
+    --green-600: #1b7c4e;
+    --green-500: #229b61;
+    --green-400: #2dc278;
+    --green-300: #56d696;
+    --white: #ffffff;
+    --off-white: #f4fbfb;
+    --gray-100: #e8f0ef;
+    --gray-200: #d0e1e0;
+    --gray-400: #7fa9a8;
+    --gray-600: #3d6b6a;
+    --gray-800: #1a3d3c;
+    --text-dark: #0a2322;
+    --text-mid: #1e4e4d;
+    --text-light: #4a7f7e;
+
+    --shadow-sm: 0 2px 8px rgba(0,60,56,.08);
+    --shadow-md: 0 6px 24px rgba(0,60,56,.12);
+    --shadow-lg: 0 16px 48px rgba(0,60,56,.18);
+    --shadow-xl: 0 32px 80px rgba(0,60,56,.24);
+
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-xl: 40px;
+    --radius-full: 9999px;
+
+    --transition: all .35s cubic-bezier(.4,0,.2,1);
+    --transition-fast: all .18s cubic-bezier(.4,0,.2,1);
+    --transition-slow: all .6s cubic-bezier(.4,0,.2,1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; font-size: 16px; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--off-white);
+    color: var(--text-dark);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ══════════════════════════════════
+     CURSOR PERSONALIZADO
+  ══════════════════════════════════ */
+  .cursor {
+    position: fixed; width: 12px; height: 12px;
+    background: var(--teal-500); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: width .2s, height .2s, background .2s;
+    mix-blend-mode: multiply;
+  }
+  .cursor-ring {
+    position: fixed; width: 40px; height: 40px;
+    border: 1.5px solid var(--teal-400); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: all .1s ease;
+    opacity: .6;
+  }
+  body:has(a:hover) .cursor,
+  body:has(button:hover) .cursor { width: 20px; height: 20px; background: var(--teal-400); }
+  body:has(a:hover) .cursor-ring,
+  body:has(button:hover) .cursor-ring { width: 56px; height: 56px; opacity: .3; }
+
+  /* ══════════════════════════════════
+     NAV
+  ══════════════════════════════════ */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 20px 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: var(--transition);
+  }
+  nav.scrolled {
+    background: rgba(244,251,251,.92);
+    backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: var(--shadow-sm);
+    padding: 14px 5%;
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none; color: var(--teal-800);
+  }
+  .nav-logo-icon {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, var(--teal-600), var(--blue-500));
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .nav-logo-icon::before {
+    content: '✚';
+    color: white; font-size: 18px; font-weight: 600;
+    position: relative; z-index: 1;
+  }
+  .nav-logo-icon::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,.2));
+  }
+  .nav-logo-text { font-size: 1.1rem; font-weight: 700; letter-spacing: -.02em; }
+  .nav-logo-text span { color: var(--teal-500); }
+  .nav-links {
+    display: flex; align-items: center; gap: 36px;
+    list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none; font-size: .85rem; font-weight: 500;
+    color: var(--text-mid); letter-spacing: .01em;
+    position: relative; padding-bottom: 2px;
+    transition: var(--transition-fast);
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: 0; left: 0;
+    width: 0; height: 1.5px;
+    background: var(--teal-500);
+    transition: width .25s ease;
+  }
+  .nav-links a:hover { color: var(--teal-600); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta {
+    background: linear-gradient(135deg, var(--teal-600), var(--blue-600));
+    color: white !important; padding: 10px 22px;
+    border-radius: var(--radius-full); font-weight: 600 !important;
+    box-shadow: 0 4px 16px rgba(0,168,159,.3);
+    transition: var(--transition) !important;
+    font-size: .82rem !important;
+  }
+  .nav-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(0,168,159,.4) !important;
+  }
+  .nav-cta::after { display: none !important; }
+
+  /* ══════════════════════════════════
+     HERO
+  ══════════════════════════════════ */
+  .hero {
+    min-height: 100vh;
+    background: var(--teal-900);
+    position: relative; overflow: hidden;
+    display: flex; align-items: center;
+    padding: 120px 5% 80px;
+  }
+
+  /* Grade decorativa animada */
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,196,186,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,196,186,.06) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridMove 20s linear infinite;
+  }
+  @keyframes gridMove {
+    0% { transform: translate(0,0); }
+    100% { transform: translate(60px,60px); }
+  }
+
+  /* Orbs de fundo */
+  .hero-orb {
+    position: absolute; border-radius: 50%;
+    filter: blur(80px); pointer-events: none;
+  }
+  .hero-orb-1 {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,168,159,.35) 0%, transparent 70%);
+    top: -200px; right: -100px;
+    animation: orbFloat 8s ease-in-out infinite;
+  }
+  .hero-orb-2 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(26,111,196,.25) 0%, transparent 70%);
+    bottom: -100px; left: 10%;
+    animation: orbFloat 10s ease-in-out infinite reverse;
+  }
+  .hero-orb-3 {
+    width: 250px; height: 250px;
+    background: radial-gradient(circle, rgba(0,200,119,.2) 0%, transparent 70%);
+    top: 40%; left: 50%;
+    animation: orbFloat 6s ease-in-out infinite 2s;
+  }
+  @keyframes orbFloat {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-30px) scale(1.05); }
+  }
+
+  /* Anel decorativo animado */
+  .hero-ring {
+    position: absolute; border-radius: 50%;
+    border: 1px solid rgba(0,196,186,.15);
+    animation: ringPulse 4s ease-in-out infinite;
+  }
+  .hero-ring:nth-child(1) { width: 300px; height: 300px; right: 15%; top: 20%; animation-delay: 0s; }
+  .hero-ring:nth-child(2) { width: 500px; height: 500px; right: 12%; top: 10%; animation-delay: .5s; }
+  .hero-ring:nth-child(3) { width: 700px; height: 700px; right: 8%; top: 0%; animation-delay: 1s; }
+  @keyframes ringPulse {
+    0%, 100% { opacity: .15; transform: scale(1); }
+    50% { opacity: .35; transform: scale(1.02); }
+  }
+
+  .hero-content {
+    position: relative; z-index: 10;
+    max-width: 620px;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(0,196,186,.12);
+    border: 1px solid rgba(0,196,186,.3);
+    color: var(--teal-300); padding: 6px 16px;
+    border-radius: var(--radius-full); font-size: .75rem;
+    font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+    margin-bottom: 28px;
+    animation: fadeSlideUp .8s ease forwards;
+  }
+  .hero-badge-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--teal-400);
+    animation: pulse 2s ease infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .5; transform: scale(1.5); }
+  }
+
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.8rem, 5.5vw, 4.2rem);
+    line-height: 1.1; color: white;
+    letter-spacing: -.03em;
+    margin-bottom: 24px;
+    animation: fadeSlideUp .8s ease .15s both;
+  }
+  .hero h1 em {
+    font-style: italic;
+    background: linear-gradient(135deg, var(--teal-300), var(--blue-300));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  .hero p {
+    font-size: 1.05rem; line-height: 1.75;
+    color: rgba(255,255,255,.65);
+    margin-bottom: 40px;
+    animation: fadeSlideUp .8s ease .3s both;
+  }
+
+  .hero-actions {
+    display: flex; flex-wrap: wrap; gap: 14px;
+    animation: fadeSlideUp .8s ease .45s both;
+  }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, var(--teal-500), var(--teal-600));
+    color: white; text-decoration: none;
+    padding: 15px 30px; border-radius: var(--radius-full);
+    font-weight: 600; font-size: .92rem;
+    box-shadow: 0 8px 30px rgba(0,168,159,.4);
+    transition: var(--transition);
+    border: none; cursor: pointer; font-family: 'Sora', sans-serif;
+  }
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 40px rgba(0,168,159,.5);
+    background: linear-gradient(135deg, var(--teal-400), var(--teal-500));
+  }
+  .btn-primary svg { transition: transform .2s ease; }
+  .btn-primary:hover svg { transform: translateX(3px); }
+
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: transparent;
+    color: rgba(255,255,255,.8); text-decoration: none;
+    padding: 15px 30px; border-radius: var(--radius-full);
+    font-weight: 500; font-size: .92rem;
+    border: 1.5px solid rgba(255,255,255,.2);
+    transition: var(--transition); cursor: pointer;
+    font-family: 'Sora', sans-serif;
+  }
+  .btn-secondary:hover {
+    background: rgba(255,255,255,.07);
+    border-color: rgba(255,255,255,.4);
+    transform: translateY(-2px);
+  }
+
+  /* Estatísticas hero */
+  .hero-stats {
+    position: relative; z-index: 10;
+    display: flex; gap: 8px; flex-wrap: wrap;
+    animation: fadeSlideUp .8s ease .6s both;
+    margin-top: 60px;
+  }
+  .hero-stat {
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(0,196,186,.2);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-md);
+    padding: 18px 24px;
+    min-width: 130px;
+    transition: var(--transition);
+  }
+  .hero-stat:hover {
+    background: rgba(0,196,186,.1);
+    border-color: rgba(0,196,186,.4);
+    transform: translateY(-4px);
+  }
+  .hero-stat-num {
+    font-size: 1.6rem; font-weight: 700; color: white;
+    font-family: 'DM Serif Display', serif;
+    line-height: 1;
+    background: linear-gradient(135deg, white, var(--teal-200));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero-stat-label {
+    font-size: .7rem; color: rgba(255,255,255,.5);
+    margin-top: 4px; text-transform: uppercase; letter-spacing: .06em;
+    font-weight: 500;
+  }
+
+  /* Card flutuante hero */
+  .hero-float-card {
+    position: absolute; right: 5%; top: 50%;
+    transform: translateY(-50%);
+    z-index: 10; width: 320px;
+    background: rgba(255,255,255,.06);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(0,196,186,.25);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    animation: cardFloat 6s ease-in-out infinite, fadeSlideUp .8s ease .8s both;
+  }
+  @keyframes cardFloat {
+    0%, 100% { transform: translateY(-50%) translateY(0); }
+    50% { transform: translateY(-50%) translateY(-12px); }
+  }
+  .float-card-title {
+    font-size: .7rem; font-weight: 600; color: var(--teal-300);
+    text-transform: uppercase; letter-spacing: .1em; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .float-card-title::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--teal-400); animation: pulse 2s ease infinite;
+  }
+  .float-card-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 0; border-bottom: 1px solid rgba(0,196,186,.1);
+  }
+  .float-card-item:last-child { border-bottom: none; }
+  .float-card-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--teal-700), var(--blue-700));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+  }
+  .float-card-text { flex: 1; }
+  .float-card-name { font-size: .78rem; font-weight: 500; color: rgba(255,255,255,.9); }
+  .float-card-sub { font-size: .66rem; color: rgba(255,255,255,.4); margin-top: 2px; }
+  .float-card-status {
+    font-size: .65rem; font-weight: 600; padding: 3px 8px;
+    border-radius: var(--radius-full);
+  }
+  .status-confirmed { background: rgba(44,194,120,.15); color: var(--green-300); }
+  .status-pending { background: rgba(255,180,0,.12); color: #ffd166; }
+
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ══════════════════════════════════
+     SEÇÃO: COMO FUNCIONA
+  ══════════════════════════════════ */
+  .section { padding: 100px 5%; }
+
+  .section-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: .7rem; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--teal-600);
+    margin-bottom: 16px;
+  }
+  .section-label::before {
+    content: ''; width: 24px; height: 2px;
+    background: var(--teal-500); border-radius: 2px;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    color: var(--text-dark); line-height: 1.2;
+    letter-spacing: -.02em; margin-bottom: 16px;
+  }
+  .section-subtitle {
+    font-size: 1rem; color: var(--text-light);
+    max-width: 520px; line-height: 1.7;
+  }
+
+  .steps-wrapper {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px; margin-top: 64px;
+  }
+
+  .step-card {
+    position: relative;
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 36px 28px;
+    border: 1px solid var(--gray-100);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    overflow: hidden;
+  }
+  .step-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--teal-500), var(--blue-500));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform .4s ease;
+  }
+  .step-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--teal-100); }
+  .step-card:hover::before { transform: scaleX(1); }
+
+  .step-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .7rem; font-weight: 400;
+    color: var(--teal-400); letter-spacing: .05em;
+    margin-bottom: 20px;
+  }
+
+  .step-icon {
+    width: 52px; height: 52px; border-radius: var(--radius-md);
+    background: var(--teal-50);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; margin-bottom: 20px;
+    transition: var(--transition);
+  }
+  .step-card:hover .step-icon {
+    background: linear-gradient(135deg, var(--teal-500), var(--blue-500));
+    transform: rotate(5deg) scale(1.1);
+  }
+  .step-card:hover .step-icon span { filter: brightness(10); }
+
+  .step-title {
+    font-size: 1.05rem; font-weight: 700;
+    color: var(--text-dark); margin-bottom: 10px;
+    letter-spacing: -.01em;
+  }
+  .step-desc {
+    font-size: .85rem; color: var(--text-light);
+    line-height: 1.65;
+  }
+
+  .step-connector {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--teal-300); font-size: 1.5rem;
+    padding-top: 60px;
+  }
+
+  /* ══════════════════════════════════
+     SEÇÃO: FORMULÁRIO DE AGENDAMENTO
+  ══════════════════════════════════ */
+  .booking-section {
+    background: linear-gradient(160deg, var(--teal-900) 0%, var(--blue-900) 100%);
+    position: relative; overflow: hidden;
+  }
+
+  .booking-section::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: radial-gradient(ellipse at 20% 50%, rgba(0,168,159,.2) 0%, transparent 60%),
+                      radial-gradient(ellipse at 80% 20%, rgba(26,111,196,.2) 0%, transparent 60%);
+  }
+
+  .booking-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px; align-items: start;
+    position: relative; z-index: 2;
+  }
+
+  .booking-info h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    color: white; line-height: 1.2;
+    letter-spacing: -.02em; margin-bottom: 20px;
+  }
+  .booking-info h2 em {
+    font-style: italic; color: var(--teal-300);
+  }
+  .booking-info p {
+    font-size: .95rem; color: rgba(255,255,255,.6);
+    line-height: 1.75; margin-bottom: 36px;
+  }
+
+  .info-features {
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .info-feature {
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 16px; background: rgba(255,255,255,.05);
+    border: 1px solid rgba(0,196,186,.15);
+    border-radius: var(--radius-md); transition: var(--transition);
+  }
+  .info-feature:hover { background: rgba(0,196,186,.1); border-color: rgba(0,196,186,.3); }
+  .info-feature-icon {
+    width: 40px; height: 40px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--teal-600), var(--blue-600));
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .info-feature-content { flex: 1; }
+  .info-feature-title { font-size: .85rem; font-weight: 600; color: white; margin-bottom: 3px; }
+  .info-feature-desc { font-size: .75rem; color: rgba(255,255,255,.45); line-height: 1.5; }
+
+  /* Formulário */
+  .booking-form-card {
+    background: white;
+    border-radius: var(--radius-xl);
+    padding: 44px;
+    box-shadow: var(--shadow-xl);
+    position: relative; overflow: hidden;
+  }
+  .booking-form-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--teal-500), var(--blue-500), var(--teal-400));
+    background-size: 200% auto;
+    animation: gradientShift 3s linear infinite;
+  }
+  @keyframes gradientShift {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+  }
+
+  .form-title {
+    font-size: 1.2rem; font-weight: 700; color: var(--text-dark);
+    margin-bottom: 6px;
+  }
+  .form-subtitle {
+    font-size: .82rem; color: var(--text-light);
+    margin-bottom: 32px;
+  }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-row.single { grid-template-columns: 1fr; }
+
+  .form-group {
+    margin-bottom: 20px; position: relative;
+  }
+
+  .form-label {
+    display: block; font-size: .75rem; font-weight: 600;
+    color: var(--text-mid); margin-bottom: 8px;
+    letter-spacing: .03em;
+  }
+  .form-label span { color: var(--teal-500); }
+
+  .form-input, .form-select, .form-textarea {
+    width: 100%; padding: 12px 16px;
+    background: var(--off-white);
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    font-family: 'Sora', sans-serif;
+    font-size: .85rem; color: var(--text-dark);
+    transition: var(--transition-fast);
+    outline: none;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--teal-500);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(0,168,159,.1);
+  }
+  .form-input:hover, .form-select:hover { border-color: var(--teal-300); }
+  .form-textarea { resize: vertical; min-height: 90px; }
+
+  .form-select { cursor: pointer; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2300a89f' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 14px center;
+  }
+
+  .form-check { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 24px; }
+  .form-check input[type="checkbox"] {
+    width: 16px; height: 16px; flex-shrink: 0;
+    accent-color: var(--teal-500); margin-top: 2px; cursor: pointer;
+  }
+  .form-check label { font-size: .78rem; color: var(--text-light); line-height: 1.5; cursor: pointer; }
+  .form-check label a { color: var(--teal-600); text-decoration: none; }
+  .form-check label a:hover { text-decoration: underline; }
+
+  .btn-form {
+    width: 100%; padding: 15px;
+    background: linear-gradient(135deg, var(--teal-600), var(--blue-600));
+    color: white; border: none; border-radius: var(--radius-md);
+    font-family: 'Sora', sans-serif; font-size: .92rem; font-weight: 600;
+    cursor: pointer; transition: var(--transition);
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    box-shadow: 0 6px 20px rgba(0,168,159,.3);
+    position: relative; overflow: hidden;
+  }
+  .btn-form::before {
+    content: '';
+    position: absolute; top: 50%; left: 50%;
+    width: 0; height: 0;
+    background: rgba(255,255,255,.15);
+    border-radius: 50%;
+    transform: translate(-50%,-50%);
+    transition: width .5s ease, height .5s ease;
+  }
+  .btn-form:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,168,159,.4); }
+  .btn-form:hover::before { width: 300px; height: 300px; }
+  .btn-form:active { transform: translateY(0); }
+
+  /* ══════════════════════════════════
+     SEÇÃO: EQUIPE
+  ══════════════════════════════════ */
+  .team-section { background: var(--off-white); }
+
+  .team-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px; margin-top: 56px;
+  }
+
+  .doctor-card {
+    background: white; border-radius: var(--radius-lg);
+    overflow: hidden; border: 1px solid var(--gray-100);
+    box-shadow: var(--shadow-sm); transition: var(--transition);
+    position: relative;
+  }
+  .doctor-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+
+  .doctor-card-image {
+    height: 200px; position: relative; overflow: hidden;
+    background: linear-gradient(135deg, var(--teal-800), var(--blue-800));
+    display: flex; align-items: center; justify-content: center;
+  }
+  .doctor-avatar {
+    width: 90px; height: 90px; border-radius: 50%;
+    background: rgba(255,255,255,.1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px; border: 2px solid rgba(0,196,186,.3);
+    transition: var(--transition);
+  }
+  .doctor-card:hover .doctor-avatar { transform: scale(1.08); }
+
+  .doctor-specialty-badge {
+    position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+    background: rgba(0,0,0,.5); backdrop-filter: blur(10px);
+    color: var(--teal-200); font-size: .65rem; font-weight: 600;
+    padding: 4px 12px; border-radius: var(--radius-full);
+    letter-spacing: .06em; text-transform: uppercase; white-space: nowrap;
+    border: 1px solid rgba(0,196,186,.2);
+  }
+
+  .doctor-card-body { padding: 24px; }
+  .doctor-name { font-size: 1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
+  .doctor-crm { font-family: 'JetBrains Mono', monospace; font-size: .7rem; color: var(--teal-500); margin-bottom: 12px; }
+  .doctor-bio { font-size: .8rem; color: var(--text-light); line-height: 1.6; margin-bottom: 16px; }
+
+  .doctor-card-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--gray-100);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .doctor-rating { display: flex; align-items: center; gap: 4px; }
+  .stars { color: #f59e0b; font-size: .8rem; }
+  .rating-num { font-size: .75rem; color: var(--text-light); margin-left: 2px; }
+  .doctor-book {
+    font-size: .75rem; font-weight: 600; color: var(--teal-600);
+    text-decoration: none; transition: var(--transition-fast);
+    display: flex; align-items: center; gap: 4px;
+  }
+  .doctor-book:hover { color: var(--teal-500); }
+  .doctor-book svg { transition: transform .2s ease; }
+  .doctor-book:hover svg { transform: translateX(2px); }
+
+  /* ══════════════════════════════════
+     SEÇÃO: DEPOIMENTOS
+  ══════════════════════════════════ */
+  .testimonials-section {
+    background: white; padding: 100px 5%;
+  }
+
+  .testimonials-track {
+    overflow: hidden; margin-top: 56px; position: relative;
+  }
+  .testimonials-track::before,
+  .testimonials-track::after {
+    content: ''; position: absolute; top: 0; bottom: 0; width: 80px; z-index: 2;
+  }
+  .testimonials-track::before { left: 0; background: linear-gradient(to right, white, transparent); }
+  .testimonials-track::after { right: 0; background: linear-gradient(to left, white, transparent); }
+
+  .testimonials-slider {
+    display: flex; gap: 24px;
+    animation: slideLoop 30s linear infinite;
+    width: max-content;
+  }
+  .testimonials-slider:hover { animation-play-state: paused; }
+
+  @keyframes slideLoop {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .testimonial-card {
+    width: 340px; flex-shrink: 0;
+    background: var(--off-white); border-radius: var(--radius-lg);
+    padding: 28px; border: 1px solid var(--gray-100);
+    transition: var(--transition);
+  }
+  .testimonial-card:hover {
+    background: white; box-shadow: var(--shadow-md);
+    border-color: var(--teal-100); transform: translateY(-4px);
+  }
+
+  .testimonial-stars { color: #f59e0b; font-size: .85rem; margin-bottom: 16px; }
+  .testimonial-text {
+    font-size: .85rem; color: var(--text-mid); line-height: 1.7;
+    margin-bottom: 20px; font-style: italic;
+  }
+  .testimonial-text::before { content: '"'; color: var(--teal-300); font-size: 1.5rem; font-family: 'DM Serif Display', serif; line-height: 0; vertical-align: -.3em; margin-right: 2px; }
+  .testimonial-text::after { content: '"'; color: var(--teal-300); font-size: 1.5rem; font-family: 'DM Serif Display', serif; line-height: 0; vertical-align: -.3em; margin-left: 2px; }
+
+  .testimonial-author { display: flex; align-items: center; gap: 12px; }
+  .testimonial-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--teal-500), var(--blue-500));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; color: white; font-weight: 600; font-size: .9rem;
+    flex-shrink: 0;
+  }
+  .testimonial-name { font-size: .85rem; font-weight: 600; color: var(--text-dark); }
+  .testimonial-date { font-size: .7rem; color: var(--text-light); }
+
+  /* ══════════════════════════════════
+     FAQ
+  ══════════════════════════════════ */
+  .faq-section { background: var(--off-white); }
+  .faq-wrapper {
+    max-width: 760px; margin: 56px auto 0;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .faq-item {
+    background: white; border-radius: var(--radius-md);
+    border: 1px solid var(--gray-100); overflow: hidden;
+    transition: var(--transition);
+  }
+  .faq-item.open { border-color: var(--teal-200); box-shadow: var(--shadow-sm); }
+
+  .faq-question {
+    padding: 20px 24px; cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    font-size: .9rem; font-weight: 600; color: var(--text-dark);
+    transition: var(--transition-fast); user-select: none;
+  }
+  .faq-question:hover { color: var(--teal-700); }
+  .faq-item.open .faq-question { color: var(--teal-700); }
+
+  .faq-icon {
+    width: 28px; height: 28px; flex-shrink: 0;
+    background: var(--teal-50); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--teal-500); font-size: 16px; font-weight: 400;
+    transition: var(--transition); line-height: 1;
+  }
+  .faq-item.open .faq-icon { background: var(--teal-500); color: white; transform: rotate(45deg); }
+
+  .faq-answer {
+    max-height: 0; overflow: hidden;
+    transition: max-height .4s cubic-bezier(.4,0,.2,1), padding .3s ease;
+    padding: 0 24px; font-size: .85rem; color: var(--text-light); line-height: 1.75;
+  }
+  .faq-item.open .faq-answer { max-height: 200px; padding-bottom: 20px; }
+
+  /* ══════════════════════════════════
+     MODAL CONFIRMAÇÃO
+  ══════════════════════════════════ */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,35,33,.7); backdrop-filter: blur(12px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px; opacity: 0; pointer-events: none;
+    transition: opacity .3s ease;
+  }
+  .modal-overlay.show { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: white; border-radius: var(--radius-xl);
+    padding: 48px 40px; max-width: 480px; width: 100%;
+    text-align: center; position: relative;
+    transform: scale(.9) translateY(20px);
+    transition: transform .35s cubic-bezier(.34,1.56,.64,1);
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+  }
+  .modal-overlay.show .modal { transform: scale(1) translateY(0); }
+
+  .modal::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--teal-500), var(--blue-500), var(--green-400));
+  }
+
+  .modal-icon {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--teal-50), var(--teal-100));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px; margin: 0 auto 24px;
+    border: 3px solid var(--teal-200);
+    animation: popIn .5s cubic-bezier(.34,1.56,.64,1) .2s both;
+  }
+  @keyframes popIn {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+  }
+
+  .modal-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.7rem; color: var(--text-dark);
+    margin-bottom: 10px; letter-spacing: -.02em;
+  }
+  .modal-subtitle { font-size: .88rem; color: var(--text-light); line-height: 1.65; margin-bottom: 28px; }
+
+  .modal-info {
+    background: var(--teal-50); border-radius: var(--radius-md);
+    padding: 16px 20px; margin-bottom: 28px;
+    display: flex; flex-direction: column; gap: 8px;
+    border: 1px solid var(--teal-100);
+    text-align: left;
+  }
+  .modal-info-item { display: flex; align-items: center; gap: 10px; font-size: .82rem; color: var(--text-mid); }
+  .modal-info-item span:first-child { font-size: 16px; }
+  .modal-info-item strong { color: var(--teal-700); }
+
+  .modal-close {
+    background: linear-gradient(135deg, var(--teal-500), var(--blue-500));
+    color: white; border: none; border-radius: var(--radius-md);
+    padding: 14px 32px; font-family: 'Sora', sans-serif;
+    font-size: .88rem; font-weight: 600; cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 4px 16px rgba(0,168,159,.3);
+  }
+  .modal-close:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,168,159,.4); }
+
+  /* ══════════════════════════════════
+     FOOTER
+  ══════════════════════════════════ */
+  footer {
+    background: var(--teal-900);
+    color: rgba(255,255,255,.6);
+    padding: 70px 5% 40px;
+    position: relative; overflow: hidden;
+  }
+  footer::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='1' fill='rgba(0,196,186,.06)'/%3E%3C/svg%3E") repeat;
+  }
+
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px; margin-bottom: 56px; position: relative;
+  }
+  .footer-brand p {
+    font-size: .82rem; line-height: 1.75;
+    max-width: 280px; margin-top: 14px;
+  }
+  .footer-brand .nav-logo { margin-bottom: 4px; }
+
+  .footer-col-title {
+    font-size: .7rem; font-weight: 700; color: white;
+    letter-spacing: .1em; text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-links a {
+    text-decoration: none; font-size: .82rem; color: rgba(255,255,255,.5);
+    transition: var(--transition-fast);
+  }
+  .footer-links a:hover { color: var(--teal-300); padding-left: 4px; }
+
+  .footer-divider { border: none; border-top: 1px solid rgba(255,255,255,.08); margin-bottom: 28px; position: relative; }
+  .footer-bottom {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px; position: relative;
+  }
+  .footer-copy { font-size: .75rem; }
+  .footer-badges { display: flex; gap: 8px; }
+  .footer-badge {
+    font-size: .65rem; font-weight: 600;
+    padding: 4px 10px; border-radius: var(--radius-full);
+    border: 1px solid rgba(0,196,186,.2);
+    color: var(--teal-300); letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  /* ══════════════════════════════════
+     TOAST NOTIFICATION
+  ══════════════════════════════════ */
+  .toast {
+    position: fixed; bottom: 28px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--teal-800); color: white;
+    padding: 14px 24px; border-radius: var(--radius-full);
+    font-size: .85rem; font-weight: 500;
+    box-shadow: var(--shadow-lg);
+    z-index: 2000; display: flex; align-items: center; gap: 10px;
+    transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+    border: 1px solid rgba(0,196,186,.3);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ══════════════════════════════════
+     PROGRESS INDICATOR FORM
+  ══════════════════════════════════ */
+  .form-progress {
+    display: flex; align-items: center; gap: 0;
+    margin-bottom: 28px;
+  }
+  .form-step {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;
+    position: relative;
+  }
+  .form-step::before {
+    content: ''; position: absolute;
+    top: 14px; left: 50%; right: -50%;
+    height: 2px; background: var(--gray-200); z-index: 0;
+  }
+  .form-step:last-child::before { display: none; }
+  .form-step-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--gray-200); color: var(--gray-400);
+    display: flex; align-items: center; justify-content: center;
+    font-size: .7rem; font-weight: 700; z-index: 1;
+    transition: var(--transition);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .form-step.active .form-step-dot {
+    background: var(--teal-500); color: white;
+    box-shadow: 0 0 0 4px rgba(0,168,159,.2);
+  }
+  .form-step.done .form-step-dot { background: var(--green-500); color: white; }
+  .form-step-label { font-size: .6rem; font-weight: 600; color: var(--gray-400); letter-spacing: .04em; text-transform: uppercase; }
+  .form-step.active .form-step-label { color: var(--teal-600); }
+  .form-step.done .form-step-label { color: var(--green-600); }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* Responsive */
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  @media (max-width: 900px) {
+    .booking-grid { grid-template-columns: 1fr; gap: 40px; }
+    .hero-float-card { display: none; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .nav-links { display: none; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .hero-stats { flex-direction: column; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .booking-form-card { padding: 28px 22px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Cursor personalizado -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-icon"></div>
+    <span class="nav-logo-text">Anes<span>Consulta</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#como-funciona">Como funciona</a></li>
+    <li><a href="#equipe">Equipe</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#agendar" class="nav-cta">Agendar Consulta</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+  <div class="hero-ring"></div>
+  <div class="hero-ring"></div>
+  <div class="hero-ring"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <div class="hero-badge-dot"></div>
+      Avaliação Pré-Anestésica Online
+    </div>
+    <h1>Sua <em>segurança</em> começa antes da cirurgia</h1>
+    <p>Agende sua consulta pré-anestésica com anestesiologistas especialistas. Avaliação completa, preparação personalizada e suporte total no seu cuidado perioperatório.</p>
+    <div class="hero-actions">
+      <a href="#agendar" class="btn-primary">
+        Agendar agora
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#como-funciona" class="btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        Como funciona
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">+12k</div>
+        <div class="hero-stat-label">Consultas realizadas</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">98%</div>
+        <div class="hero-stat-label">Satisfação</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">24h</div>
+        <div class="hero-stat-label">Retorno garantido</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card flutuante -->
+  <div class="hero-float-card">
+    <div class="float-card-title">Próximas Consultas</div>
+    <div class="float-card-item">
+      <div class="float-card-icon">🩺</div>
+      <div class="float-card-text">
+        <div class="float-card-name">Maria S. — Consulta geral</div>
+        <div class="float-card-sub">Hoje, 14h30 · Dr. Ricardo</div>
+      </div>
+      <div class="float-card-status status-confirmed">Confirmada</div>
+    </div>
+    <div class="float-card-item">
+      <div class="float-card-icon">💉</div>
+      <div class="float-card-text">
+        <div class="float-card-name">João A. — Pré-cirúrgico</div>
+        <div class="float-card-sub">Amanhã, 10h00 · Dra. Beatriz</div>
+      </div>
+      <div class="float-card-status status-pending">Pendente</div>
+    </div>
+    <div class="float-card-item">
+      <div class="float-card-icon">🫀</div>
+      <div class="float-card-text">
+        <div class="float-card-name">Ana R. — Cardiológico</div>
+        <div class="float-card-sub">Quinta, 09h00 · Dr. Paulo</div>
+      </div>
+      <div class="float-card-status status-confirmed">Confirmada</div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section class="section" id="como-funciona">
+  <div class="reveal">
+    <div class="section-label">Processo</div>
+    <h2 class="section-title">Simples, rápido e seguro</h2>
+    <p class="section-subtitle">Nossa plataforma foi desenvolvida para tornar o processo de avaliação pré-anestésica o mais simples e tranquilo possível para você.</p>
+  </div>
+  <div class="steps-wrapper">
+    <div class="step-card reveal">
+      <div class="step-number">// PASSO 01</div>
+      <div class="step-icon"><span>📋</span></div>
+      <div class="step-title">Preencha o formulário</div>
+      <div class="step-desc">Informe seus dados pessoais, histórico médico e procedimento cirúrgico planejado de forma segura e criptografada.</div>
+    </div>
+    <div class="step-card reveal">
+      <div class="step-number">// PASSO 02</div>
+      <div class="step-icon"><span>👨‍⚕️</span></div>
+      <div class="step-title">Escolha o especialista</div>
+      <div class="step-desc">Selecione entre nossa equipe de anestesiologistas certificados pelo CRM/SAESP conforme disponibilidade e especialidade.</div>
+    </div>
+    <div class="step-card reveal">
+      <div class="step-number">// PASSO 03</div>
+      <div class="step-icon"><span>📅</span></div>
+      <div class="step-title">Confirme o horário</div>
+      <div class="step-desc">Escolha data e horário convenientes para você. Consultas presenciais ou por telemedicina com link seguro gerado automaticamente.</div>
+    </div>
+    <div class="step-card reveal">
+      <div class="step-number">// PASSO 04</div>
+      <div class="step-icon"><span>✅</span></div>
+      <div class="step-title">Receba seu laudo</div>
+      <div class="step-desc">Após a consulta, receba o parecer pré-anestésico digital com validade legal em até 24 horas no seu e-mail.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FORMULÁRIO DE AGENDAMENTO -->
+<section class="section booking-section" id="agendar">
+  <div class="booking-grid">
+    <div class="booking-info reveal">
+      <div class="section-label" style="color: var(--teal-300);">Agendamento</div>
+      <h2>Reserve sua <em>consulta</em> em minutos</h2>
+      <p>Preencha o formulário ao lado e nossa equipe entrará em contato em até 2 horas para confirmar todos os detalhes da sua avaliação pré-anestésica.</p>
+      <div class="info-features">
+        <div class="info-feature">
+          <div class="info-feature-icon">🔒</div>
+          <div class="info-feature-content">
+            <div class="info-feature-title">Dados 100% seguros (LGPD)</div>
+            <div class="info-feature-desc">Suas informações são protegidas com criptografia de ponta a ponta e armazenadas em conformidade com a Lei Geral de Proteção de Dados.</div>
+          </div>
+        </div>
+        <div class="info-feature">
+          <div class="info-feature-icon">💻</div>
+          <div class="info-feature-content">
+            <div class="info-feature-title">Telemedicina ou presencial</div>
+            <div class="info-feature-desc">Escolha entre consulta online via plataforma segura ou presencial em nossos consultórios parceiros.</div>
+          </div>
+        </div>
+        <div class="info-feature">
+          <div class="info-feature-icon">📞</div>
+          <div class="info-feature-content">
+            <div class="info-feature-title">Suporte 24/7</div>
+            <div class="info-feature-desc">Nossa equipe está sempre disponível para esclarecer dúvidas e oferecer suporte antes, durante e após a consulta.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="booking-form-card reveal">
+      <!-- Progress -->
+      <div class="form-progress" id="formProgress">
+        <div class="form-step active" data-step="1">
+          <div class="form-step-dot">1</div>
+          <div class="form-step-label">Dados</div>
+        </div>
+        <div class="form-step" data-step="2">
+          <div class="form-step-dot">2</div>
+          <div class="form-step-label">Médico</div>
+        </div>
+        <div class="form-step" data-step="3">
+          <div class="form-step-dot">3</div>
+          <div class="form-step-label">Horário</div>
+        </div>
+      </div>
+
+      <div class="form-title">Agendar Consulta Pré-Anestésica</div>
+      <div class="form-subtitle">Preencha os campos abaixo — processo leva menos de 3 minutos</div>
+
+      <form id="bookingForm" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="nome">Nome completo <span>*</span></label>
+            <input type="text" id="nome" class="form-input" placeholder="Maria da Silva" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cpf">CPF <span>*</span></label>
+            <input type="text" id="cpf" class="form-input" placeholder="000.000.000-00" maxlength="14" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="email">E-mail <span>*</span></label>
+            <input type="email" id="email" class="form-input" placeholder="seu@email.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="telefone">Telefone <span>*</span></label>
+            <input type="tel" id="telefone" class="form-input" placeholder="(11) 99999-9999" maxlength="15" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="nascimento">Data de nascimento <span>*</span></label>
+            <input type="date" id="nascimento" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="plano">Plano de saúde</label>
+            <select id="plano" class="form-select">
+              <option value="">Selecione ou particular</option>
+              <option value="amil">Amil</option>
+              <option value="unimed">Unimed</option>
+              <option value="bradesco">Bradesco Saúde</option>
+              <option value="hapvida">Hapvida</option>
+              <option value="sulamerica">SulAmérica</option>
+              <option value="particular">Particular</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="medico">Anestesiologista <span>*</span></label>
+            <select id="medico" class="form-select" required>
+              <option value="">Selecione o especialista</option>
+              <option value="ricardo">Dr. Ricardo Mendes — Adulto/Geral</option>
+              <option value="beatriz">Dra. Beatriz Carvalho — Pediátrica</option>
+              <option value="paulo">Dr. Paulo Santos — Cardíaco</option>
+              <option value="ana">Dra. Ana Lima — Obstétrica</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="tipo">Tipo de consulta <span>*</span></label>
+            <select id="tipo" class="form-select" required>
+              <option value="">Selecione</option>
+              <option value="online">💻 Telemedicina (online)</option>
+              <option value="presencial">🏥 Presencial</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="data">Data desejada <span>*</span></label>
+            <input type="date" id="data" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="horario">Horário preferido <span>*</span></label>
+            <select id="horario" class="form-select" required>
+              <option value="">Selecione</option>
+              <option value="08:00">08:00</option>
+              <option value="09:00">09:00</option>
+              <option value="10:00">10:00</option>
+              <option value="11:00">11:00</option>
+              <option value="14:00">14:00</option>
+              <option value="15:00">15:00</option>
+              <option value="16:00">16:00</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row single">
+          <div class="form-group">
+            <label class="form-label" for="cirurgia">Procedimento cirúrgico planejado <span>*</span></label>
+            <input type="text" id="cirurgia" class="form-input" placeholder="Ex: apendicectomia, artroplastia de joelho..." required>
+          </div>
+        </div>
+
+        <div class="form-row single">
+          <div class="form-group">
+            <label class="form-label" for="obs">Observações / Comorbidades</label>
+            <textarea id="obs" class="form-textarea" placeholder="Informe alergias, medicamentos em uso, doenças crônicas, cirurgias anteriores..."></textarea>
+          </div>
+        </div>
+
+        <div class="form-check">
+          <input type="checkbox" id="lgpd" required>
+          <label for="lgpd">Li e aceito os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a>. Autorizo o tratamento dos meus dados pessoais de saúde conforme a LGPD.</label>
+        </div>
+
+        <button type="submit" class="btn-form">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          Confirmar Agendamento
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- EQUIPE -->
+<section class="section team-section" id="equipe">
+  <div class="reveal" style="text-align:center">
+    <div class="section-label">Nossa equipe</div>
+    <h2 class="section-title">Especialistas em <em style="font-style:italic;color:var(--teal-600);">anestesiologia</em></h2>
+    <p class="section-subtitle" style="margin:0 auto;">Médicos certificados pelo CRM, SAESP e com formação em grandes centros nacionais e internacionais.</p>
+  </div>
+  <div class="team-grid">
+    <div class="doctor-card reveal">
+      <div class="doctor-card-image">
+        <div class="doctor-avatar">👨‍⚕️</div>
+        <div class="doctor-specialty-badge">Anestesia Geral</div>
+      </div>
+      <div class="doctor-card-body">
+        <div class="doctor-name">Dr. Ricardo Mendes</div>
+        <div class="doctor-crm">CRM-SP 123.456 | SAESP</div>
+        <div class="doctor-bio">Especialista em anestesiologia geral e neuromonitorização. 15 anos de experiência em grandes centros hospitalares.</div>
+      </div>
+      <div class="doctor-card-footer">
+        <div class="doctor-rating"><span class="stars">★★★★★</span><span class="rating-num">5.0 (312)</span></div>
+        <a href="#agendar" class="doctor-book">Agendar <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+    <div class="doctor-card reveal">
+      <div class="doctor-card-image" style="background:linear-gradient(135deg,#003d5c,#005c7a)">
+        <div class="doctor-avatar">👩‍⚕️</div>
+        <div class="doctor-specialty-badge">Anestesia Pediátrica</div>
+      </div>
+      <div class="doctor-card-body">
+        <div class="doctor-name">Dra. Beatriz Carvalho</div>
+        <div class="doctor-crm">CRM-SP 234.567 | SAESP</div>
+        <div class="doctor-bio">Subespecialista em anestesia pediátrica e neonatal. Formação no HC-FMUSP com pós-doutorado em Toronto.</div>
+      </div>
+      <div class="doctor-card-footer">
+        <div class="doctor-rating"><span class="stars">★★★★★</span><span class="rating-num">4.9 (287)</span></div>
+        <a href="#agendar" class="doctor-book">Agendar <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+    <div class="doctor-card reveal">
+      <div class="doctor-card-image" style="background:linear-gradient(135deg,#1a3300,#2a5200)">
+        <div class="doctor-avatar">👨‍⚕️</div>
+        <div class="doctor-specialty-badge">Anestesia Cardíaca</div>
+      </div>
+      <div class="doctor-card-body">
+        <div class="doctor-name">Dr. Paulo Santos</div>
+        <div class="doctor-crm">CRM-SP 345.678 | SAESP</div>
+        <div class="doctor-bio">Referência nacional em anestesia cardiovascular. Participou de mais de 4.000 cirurgias cardíacas complexas.</div>
+      </div>
+      <div class="doctor-card-footer">
+        <div class="doctor-rating"><span class="stars">★★★★★</span><span class="rating-num">5.0 (198)</span></div>
+        <a href="#agendar" class="doctor-book">Agendar <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+    <div class="doctor-card reveal">
+      <div class="doctor-card-image" style="background:linear-gradient(135deg,#3a0050,#5c0078)">
+        <div class="doctor-avatar">👩‍⚕️</div>
+        <div class="doctor-specialty-badge">Anestesia Obstétrica</div>
+      </div>
+      <div class="doctor-card-body">
+        <div class="doctor-name">Dra. Ana Lima</div>
+        <div class="doctor-crm">CRM-SP 456.789 | SAESP</div>
+        <div class="doctor-bio">Especialista em anestesia obstétrica e controle da dor. Experiência em partos humanizados e cirurgias fetais.</div>
+      </div>
+      <div class="doctor-card-footer">
+        <div class="doctor-rating"><span class="stars">★★★★★</span><span class="rating-num">4.9 (421)</span></div>
+        <a href="#agendar" class="doctor-book">Agendar <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section class="testimonials-section" id="depoimentos">
+  <div class="reveal" style="text-align:center">
+    <div class="section-label" style="justify-content:center">Depoimentos</div>
+    <h2 class="section-title">O que nossos pacientes dizem</h2>
+  </div>
+  <div class="testimonials-track">
+    <div class="testimonials-slider" id="testimonialSlider">
+      <!-- Cards duplicados para loop infinito -->
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">Processo incrivelmente simples. Agendei online, fiz a consulta por vídeo com a Dra. Beatriz e recebi o parecer no mesmo dia. Extremamente profissional.</div>
+        <div class="testimonial-author"><div class="testimonial-avatar">MR</div><div><div class="testimonial-name">Mariana Rodrigues</div><div class="testimonial-date">Janeiro 2025</div></div></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">O Dr. Ricardo foi extremamente cuidadoso e detalhista. Explicou tudo sobre o processo anestésico para minha cirurgia. Me senti muito seguro!</div>
+        <div class="testimonial-author"><div class="testimonial-avatar">CT</div><div><div class="testimonial-name">Carlos Teixeira</div><div class="testimonial-date">Fevereiro 2025</div></div></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">Tinha muito medo da anestesia na cesárea. A Dra. Ana Lima me tranquilizou completamente. Consulta humanizada, cheia de atenção e carinho.</div>
+        <div class="testimonial-author"><div class="testimonial-avatar">FS</div><div><div class="testimonial-name">Fernanda Souza</div><div class="testimonial-date">Março 2025</div></div></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">Plataforma moderna, fácil de usar e segura. Fiz o agendamento em menos de 5 minutos. Recomendo para qualquer pessoa que precise de avaliação pré-operatória.</div>
+        <div class="testimonial-author"><div class="testimonial-avatar">PA</div><div><div class="testimonial-name">Pedro Andrade</div><div class="testimonial-date">Abril 2025</div></div></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">Dr. Paulo realizou minha avaliação pré-cirurgia cardíaca com maestria. Sua experiência e tranquilidade me deram toda confiança para o procedimento.</div>
+        <div class="testimonial-author"><div class="testimonial-avatar">RL</div><div><div class="testimonial-name">Roberto Lima</div><div class="testimonial-date">Maio 2025</div></div></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">Atendimento impecável. Recebi todas as orientações de jejum e medicamentos com clareza. O laudo digital chegou formatado e assinado digitalmente.</div>
+        <div class="testimonial-author"><div class="testimonial-avatar">JM</div><div><div class="testimonial-name">Juliana Martins</div><div class="testimonial-date">Junho 2025</div></div></div>
+      </div>
+      <!-- Duplicados para loop contínuo -->
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">Processo incrivelmente simples. Agendei online, fiz a consulta por vídeo com a Dra. Beatriz e recebi o parecer no mesmo dia. Extremamente profissional.</div>
+        <div class="testimonial-author"><div class="testimonial-avatar">MR</div><div><div class="testimonial-name">Mariana Rodrigues</div><div class="testimonial-date">Janeiro 2025</div></div></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">O Dr. Ricardo foi extremamente cuidadoso e detalhista. Explicou tudo sobre o processo anestésico para minha cirurgia. Me senti muito seguro!</div>
+        <div class="testimonial-author"><div class="testimonial-avatar">CT</div><div><div class="testimonial-name">Carlos Teixeira</div><div class="testimonial-date">Fevereiro 2025</div></div></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">Tinha muito medo da anestesia na cesárea. A Dra. Ana Lima me tranquilizou completamente. Consulta humanizada, cheia de atenção e carinho.</div>
+        <div class="testimonial-author"><div class="testimonial-avatar">FS</div><div><div class="testimonial-name">Fernanda Souza</div><div class="testimonial-date">Março 2025</div></div></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">Plataforma moderna, fácil de usar e segura. Fiz o agendamento em menos de 5 minutos. Recomendo para qualquer pessoa que precise de avaliação pré-operatória.</div>
+        <div class="testimonial-author"><div class="testimonial-avatar">PA</div><div><div class="testimonial-name">Pedro Andrade</div><div class="testimonial-date">Abril 2025</div></div></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">Dr. Paulo realizou minha avaliação pré-cirurgia cardíaca com maestria. Sua experiência e tranquilidade me deram toda confiança para o procedimento.</div>
+        <div class="testimonial-author"><div class="testimonial-avatar">RL</div><div><div class="testimonial-name">Roberto Lima</div><div class="testimonial-date">Maio 2025</div></div></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">Atendimento impecável. Recebi todas as orientações de jejum e medicamentos com clareza. O laudo digital chegou formatado e assinado digitalmente.</div>
+        <div class="testimonial-author"><div class="testimonial-avatar">JM</div><div><div class="testimonial-name">Juliana Martins</div><div class="testimonial-date">Junho 2025</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section faq-section" id="faq">
+  <div class="reveal" style="text-align:center">
+    <div class="section-label" style="justify-content:center">Dúvidas frequentes</div>
+    <h2 class="section-title">Perguntas sobre a <em style="font-style:italic;color:var(--teal-600)">consulta</em></h2>
+  </div>
+  <div class="faq-wrapper">
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        O que é a avaliação pré-anestésica e por que é obrigatória?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-answer">A avaliação pré-anestésica é uma consulta médica especializada realizada antes de qualquer procedimento cirúrgico ou exame que requeira sedação. Ela é essencial para identificar riscos, otimizar condições de saúde e planejar a melhor técnica anestésica para cada paciente. É exigida pelo CFM (Resolução 1802/2006) e pelo Código de Ética Médica.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        Quais documentos devo levar ou enviar para a consulta?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-answer">Você deve ter em mãos: documento de identidade com foto, pedido médico/cirúrgico, exames laboratoriais e de imagem recentes (até 6 meses), lista de medicamentos em uso, relatórios de internações ou cirurgias anteriores e cartão do plano de saúde. Para consultas online, os documentos podem ser enviados digitalizados pelo portal.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        Com quanto tempo de antecedência devo agendar a consulta?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-answer">Recomendamos agendar a consulta pré-anestésica com pelo menos 7 a 10 dias de antecedência à cirurgia. Em casos de urgência ou quando exames adicionais são necessários, esse prazo pode ser maior. Consultas de emergência com menor prazo podem ser solicitadas mediante avaliação.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        A consulta por telemedicina tem a mesma validade legal?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-answer">Sim. A telemedicina no Brasil está regulamentada pelo CFM (Resolução 2314/2022) e pela Lei 14.510/2022. O parecer pré-anestésico emitido por telemedicina possui validade legal idêntica ao presencial, sendo assinado digitalmente com certificado ICP-Brasil pelo médico responsável.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        O plano de saúde cobre a consulta pré-anestésica?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-answer">A maioria dos planos de saúde cobre a consulta pré-anestésica, pois ela está prevista no Rol de Procedimentos da ANS. Verifique com sua operadora antes do agendamento. Para consultas particulares, informamos os valores previamente e oferecemos parcelamento.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        Posso remarcar ou cancelar minha consulta?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-answer">Sim, você pode remarcar ou cancelar sua consulta com até 24 horas de antecedência sem custo. Cancelamentos com menos de 24 horas podem ter incidência de taxa conforme a política de cada médico. Toda gestão pode ser feita pelo portal ou entrando em contato com nosso suporte.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo" style="display:inline-flex">
+        <div class="nav-logo-icon"></div>
+        <span class="nav-logo-text" style="color:white">Anes<span>Consulta</span></span>
+      </a>
+      <p>Plataforma especializada em agendamento de consultas pré-anestésicas, conectando pacientes e cirurgiões a anestesiologistas certificados em todo o Brasil.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Especialidades</div>
+      <ul class="footer-links">
+        <li><a href="#">Anestesia Geral</a></li>
+        <li><a href="#">Anestesia Pediátrica</a></li>
+        <li><a href="#">Anestesia Cardíaca</a></li>
+        <li><a href="#">Anestesia Obstétrica</a></li>
+        <li><a href="#">Anestesia Regional</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Institucional</div>
+      <ul class="footer-links">
+        <li><a href="#">Sobre nós</a></li>
+        <li><a href="#">Nossos médicos</a></li>
+        <li><a href="#">Certificações</a></li>
+        <li><a href="#">Blog médico</a></li>
+        <li><a href="#">Contato</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Legal</div>
+      <ul class="footer-links">
+        <li><a href="#">Termos de uso</a></li>
+        <li><a href="#">Privacidade (LGPD)</a></li>
+        <li><a href="#">Política de cookies</a></li>
+        <li><a href="#">Ouvidoria</a></li>
+        <li><a href="#">CFM/CRM</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr class="footer-divider">
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 AnesConsulta. Todos os direitos reservados. CNPJ 00.000.000/0001-00</div>
+    <div class="footer-badges">
+      <div class="footer-badge">CFM</div>
+      <div class="footer-badge">SAESP</div>
+      <div class="footer-badge">LGPD</div>
+      <div class="footer-badge">ANS</div>
+      <div class="footer-badge">ICP-Brasil</div>
+    </div>
+  </div>
+</footer>
+
+<!-- MODAL CONFIRMAÇÃO -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal">
+    <div class="modal-icon">✅</div>
+    <div class="modal-title">Consulta Agendada!</div>
+    <div class="modal-subtitle">Sua avaliação pré-anestésica foi agendada com sucesso. Você receberá um e-mail de confirmação em breve.</div>
+    <div class="modal-info" id="modalInfo">
+      <div class="modal-info-item"><span>👨‍⚕️</span><div>Médico: <strong id="modalMedico">—</strong></div></div>
+      <div class="modal-info-item"><span>📅</span><div>Data: <strong id="modalData">—</strong></div></div>
+      <div class="modal-info-item"><span>🕐</span><div>Horário: <strong id="modalHorario">—</strong></div></div>
+      <div class="modal-info-item"><span>💻</span><div>Tipo: <strong id="modalTipo">—</strong></div></div>
+    </div>
+    <button class="modal-close" onclick="closeModal()">Entendido, obrigado!</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span>✓</span>
+  <span id="toastMsg">Mensagem</span>
+</div>
+
+<script>
+  // ══ Cursor personalizado ══
+  const cursor = document.getElementById('cursor');
+  const cursorRing = document.getElementById('cursorRing');
+  let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    cursor.style.left = mouseX + 'px';
+    cursor.style.top = mouseY + 'px';
+  });
+
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.15;
+    ringY += (mouseY - ringY) * 0.15;
+    cursorRing.style.left = ringX + 'px';
+    cursorRing.style.top = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  // ══ Navbar scroll ══
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // ══ Scroll reveal ══
+  const revealObserver = new IntersectionObserver(entries => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        const delay = entry.target.style.animationDelay || (i * 80) + 'ms';
+        entry.target.style.transitionDelay = entry.target.dataset.delay || '0ms';
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    el.dataset.delay = (i % 4) * 100 + 'ms';
+    revealObserver.observe(el);
+  });
+
+  // ══ FAQ toggle ══
+  function toggleFaq(el) {
+    const item = el.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // ══ CPF mask ══
+  document.getElementById('cpf').addEventListener('input', function() {
+    let v = this.value.replace(/\D/g, '');
+    if (v.length > 11) v = v.slice(0, 11);
+    v = v.replace(/(\d{3})(\d)/, '$1.$2');
+    v = v.replace(/(\d{3})(\d)/, '$1.$2');
+    v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    this.value = v;
+  });
+
+  // ══ Telefone mask ══
+  document.getElementById('telefone').addEventListener('input', function() {
+    let v = this.value.replace(/\D/g, '');
+    if (v.length > 11) v = v.slice(0, 11);
+    v = v.replace(/^(\d{2})(\d)/, '($1) $2');
+    v = v.replace(/(\d{5})(\d{4})$/, '$1-$2');
+    this.value = v;
+  });
+
+  // ══ Form progress visual ══
+  function updateProgress() {
+    const nome = document.getElementById('nome').value;
+    const email = document.getElementById('email').value;
+    const medico = document.getElementById('medico').value;
+    const data = document.getElementById('data').value;
+    const horario = document.getElementById('horario').value;
+
+    const steps = document.querySelectorAll('.form-step');
+    steps[0].className = 'form-step ' + (nome || email ? 'active' : '');
+    steps[1].className = 'form-step ' + (nome && email ? (medico ? 'done' : 'active') : '');
+    steps[2].className = 'form-step ' + (medico ? (data && horario ? 'done' : 'active') : '');
+  }
+
+  ['nome','email','medico','data','horario'].forEach(id => {
+    document.getElementById(id).addEventListener('input', updateProgress);
+    document.getElementById(id).addEventListener('change', updateProgress);
+  });
+
+  // ══ Form submit ══
+  document.getElementById('bookingForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const required = ['nome','email','telefone','nascimento','medico','tipo','data','horario','cirurgia'];
+    let valid = true;
+
+    required.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el.value.trim()) {
+        el.style.borderColor = '#e74c3c';
+        el.style.boxShadow = '0 0 0 3px rgba(231,76,60,.1)';
+        valid = false;
+        setTimeout(() => { el.style.borderColor = ''; el.style.boxShadow = ''; }, 2500);
+      }
+    });
+
+    if (!document.getElementById('lgpd').checked) {
+      showToast('⚠️ Aceite os termos de uso e a política de privacidade.');
+      return;
+    }
+
+    if (!valid) {
+      showToast('⚠️ Preencha todos os campos obrigatórios.');
+      return;
+    }
+
+    // Preencher modal
+    const medicoOpts = { 'ricardo': 'Dr. Ricardo Mendes', 'beatriz': 'Dra. Beatriz Carvalho', 'paulo': 'Dr. Paulo Santos', 'ana': 'Dra. Ana Lima' };
+    const tipoOpts = { 'online': '💻 Telemedicina', 'presencial': '🏥 Presencial' };
+    const dataVal = document.getElementById('data').value;
+    const dataFormatted = dataVal ? new Date(dataVal + 'T12:00').toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' }) : '—';
+
+    document.getElementById('modalMedico').textContent = medicoOpts[document.getElementById('medico').value] || '—';
+    document.getElementById('modalData').textContent = dataFormatted;
+    document.getElementById('modalHorario').textContent = document.getElementById('horario').value + 'h';
+    document.getElementById('modalTipo').textContent = tipoOpts[document.getElementById('tipo').value] || '—';
+
+    document.getElementById('confirmModal').classList.add('show');
+  });
+
+  function closeModal() {
+    document.getElementById('confirmModal').classList.remove('show');
+    document.getElementById('bookingForm').reset();
+    updateProgress();
+    showToast('✅ Consulta confirmada! Verifique seu e-mail.');
+  }
+
+  document.getElementById('confirmModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  // ══ Toast ══
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3500);
+  }
+
+  // ══ Smooth scroll ══
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+  });
+
+  // ══ Animar números nas stats ══
+  function animateCounter(el, target, suffix = '') {
+    let start = 0;
+    const duration = 2000;
+    const step = target / (duration / 16);
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= target) { start = target; clearInterval(timer); }
+      el.textContent = (Number.isInteger(target) ? Math.floor(start) : start.toFixed(0)) + suffix;
+    }, 16);
+  }
+
+  const statsObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const nums = entry.target.querySelectorAll('.hero-stat-num');
+        nums[0] && animateCounter(nums[0], 12000, '+');
+        nums[1] && animateCounter(nums[1], 98, '%');
+        nums[2] && (nums[2].textContent = '24h');
+        statsObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  const statsSection = document.querySelector('.hero-stats');
+  if (statsSection) statsObserver.observe(statsSection);
+
+  // Data mínima = hoje
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('data').min = today;
+  document.getElementById('nascimento').max = today;
+
+  // Init progress
+  updateProgress();
+</script>
+</body>
+</html>
