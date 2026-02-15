@@ -1,4 +1,4 @@
-# ✚ AnesConsulta — Site de Agendamento Pré-Anestésico
+# ✚ AnestConsulta — Site de Agendamento Pré-Anestésico
 
 Sistema completo de agendamento de consultas pré-anestésicas com frontend em HTML/CSS/JS e backend em PHP + MySQL.
 
@@ -93,7 +93,7 @@ URL: `https://seudominio.com.br/admin/admin.php`
 
 | Campo | Valor padrão |
 |-------|-------------|
-| E-mail | `admin@anesconsulta.com.br` |
+| E-mail | `admin@anestconsulta.com` |
 | Senha | `Admin@2025` |
 
 > ⚠️ **Troque a senha imediatamente** após o primeiro login!

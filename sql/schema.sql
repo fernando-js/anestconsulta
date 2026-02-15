@@ -1,5 +1,5 @@
 -- ══════════════════════════════════════════════
--- AnesConsulta — Schema do Banco de Dados MySQL
+-- AnestConsulta — Schema do Banco de Dados MySQL
 -- ══════════════════════════════════════════════
 
 CREATE DATABASE IF NOT EXISTS anesconsulta
@@ -20,10 +20,10 @@ CREATE TABLE IF NOT EXISTS medicos (
 ) ENGINE=InnoDB;
 
 INSERT INTO medicos (nome, crm, especialidade, email) VALUES
-  ('Dr. Ricardo Mendes',   'CRM-SP 123456', 'Anestesia Geral',      'ricardo@anesconsulta.com.br'),
-  ('Dra. Beatriz Carvalho','CRM-SP 234567', 'Anestesia Pediátrica', 'beatriz@anesconsulta.com.br'),
-  ('Dr. Paulo Santos',     'CRM-SP 345678', 'Anestesia Cardíaca',   'paulo@anesconsulta.com.br'),
-  ('Dra. Ana Lima',        'CRM-SP 456789', 'Anestesia Obstétrica', 'ana@anesconsulta.com.br');
+  ('Dr. Ricardo Mendes',   'CRM-SP 123456', 'Anestesia Geral',      'ricardo@anestconsulta.com'),
+  ('Dra. Beatriz Carvalho','CRM-SP 234567', 'Anestesia Pediátrica', 'beatriz@anestconsulta.com'),
+  ('Dr. Paulo Santos',     'CRM-SP 345678', 'Anestesia Cardíaca',   'paulo@anestconsulta.com'),
+  ('Dra. Ana Lima',        'CRM-SP 456789', 'Anestesia Obstétrica', 'ana@anestconsulta.com');
 
 -- ── Tabela principal de agendamentos ──────────
 CREATE TABLE IF NOT EXISTS agendamentos (
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS admin_usuarios (
 
 -- Senha padrão: Admin@2025 (TROQUE após o primeiro login!)
 INSERT INTO admin_usuarios (nome, email, senha_hash) VALUES
-  ('Administrador', 'admin@anesconsulta.com.br',
+  ('Administrador', 'admin@anestconsulta.com',
    '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.');
 
 -- ── Tabela de log de e-mails ──────────────────

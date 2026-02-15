@@ -1,6 +1,6 @@
 <?php
 // ══════════════════════════════════════════════
-// AnesConsulta — Envio de E-mails (PHPMailer)
+// AnestConsulta — Envio de E-mails (PHPMailer)
 // ══════════════════════════════════════════════
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -15,7 +15,7 @@ if ($usePHPMailer) {
 
 // ── Enviar e-mail para o PACIENTE ─────────────
 function enviarEmailPaciente(array $d): array {
-    $assunto = '✅ Consulta Agendada — AnesConsulta';
+    $assunto = '✅ Consulta Agendada — AnestConsulta';
     $corpo   = templateEmailPaciente($d);
     return enviarEmail($d['email'], $d['nome'], $assunto, $corpo);
 }
@@ -79,7 +79,7 @@ function templateEmailPaciente(array $d): string {
       <!-- Header -->
       <tr><td style="background:linear-gradient(135deg,#008c87,#0050b3);padding:36px 40px;text-align:center">
         <div style="font-size:32px;margin-bottom:8px">✚</div>
-        <h1 style="color:#ffffff;margin:0;font-size:22px;font-weight:700;letter-spacing:-0.5px">AnesConsulta</h1>
+        <h1 style="color:#ffffff;margin:0;font-size:22px;font-weight:700;letter-spacing:-0.5px">AnestConsulta</h1>
         <p style="color:rgba(255,255,255,.7);margin:6px 0 0;font-size:13px">Avaliação Pré-Anestésica</p>
       </td></tr>
       <!-- Ícone de sucesso -->
@@ -132,7 +132,7 @@ function templateEmailPaciente(array $d): string {
       <!-- Footer -->
       <tr><td style="background:#f4fbfb;padding:24px 40px;text-align:center;border-top:1px solid #e8f0ef">
         <p style="margin:0 0 6px;font-size:12px;color:#4a7f7e">Dúvidas? Entre em contato conosco</p>
-        <p style="margin:0;font-size:12px;color:#7fa9a8">© 2025 AnesConsulta — CNPJ 00.000.000/0001-00</p>
+        <p style="margin:0;font-size:12px;color:#7fa9a8">© 2025 AnestConsulta — CNPJ 00.000.000/0001-00</p>
         <p style="margin:6px 0 0;font-size:11px;color:#aac8c7">Token de confirmação: {$d['token']}</p>
       </td></tr>
     </table>
@@ -154,7 +154,7 @@ function templateEmailMedico(array $d): string {
     <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,60,56,.12)">
       <tr><td style="background:linear-gradient(135deg,#003d3b,#002f6c);padding:28px 40px">
         <h1 style="color:#ffffff;margin:0;font-size:18px">📋 Novo Agendamento</h1>
-        <p style="color:rgba(255,255,255,.6);margin:4px 0 0;font-size:13px">AnesConsulta — Painel Médico</p>
+        <p style="color:rgba(255,255,255,.6);margin:4px 0 0;font-size:13px">AnestConsulta — Painel Médico</p>
       </td></tr>
       <tr><td style="padding:32px 40px">
         <p style="color:#0a2322;font-size:14px;margin:0 0 20px">Olá, <strong>{$d['medico']}</strong>! Você tem um novo agendamento.</p>
@@ -187,7 +187,7 @@ function templateEmailMedico(array $d): string {
         </div>
       </td></tr>
       <tr><td style="background:#f4fbfb;padding:18px 40px;text-align:center;border-top:1px solid #e8f0ef">
-        <p style="margin:0;font-size:12px;color:#7fa9a8">© 2025 AnesConsulta</p>
+        <p style="margin:0;font-size:12px;color:#7fa9a8">© 2025 AnestConsulta</p>
       </td></tr>
     </table>
   </td></tr>

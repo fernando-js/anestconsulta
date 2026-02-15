@@ -1,6 +1,6 @@
 <?php
 // ══════════════════════════════════════════════
-// AnesConsulta — Painel Administrativo
+// AnestConsulta — Painel Administrativo
 // ══════════════════════════════════════════════
 
 session_start();
@@ -36,7 +36,7 @@ if (empty($_SESSION['admin_id'])) {
     <html lang="pt-BR">
     <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Admin — AnesConsulta</title>
+    <title>Admin — AnestConsulta</title>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
       *{box-sizing:border-box;margin:0;padding:0}
@@ -59,7 +59,7 @@ if (empty($_SESSION['admin_id'])) {
     <div class="login-card">
       <div class="login-logo">
         <div class="login-logo-icon">✚</div>
-        <h1>AnesConsulta</h1>
+        <h1>AnestConsulta</h1>
         <p>Painel Administrativo</p>
       </div>
       <?php if (!empty($erro_login)): ?>
@@ -68,7 +68,7 @@ if (empty($_SESSION['admin_id'])) {
       <form method="POST">
         <div class="form-group">
           <label>E-mail</label>
-          <input type="email" name="email" placeholder="admin@anesconsulta.com.br" required>
+          <input type="email" name="email" placeholder="consulta@anestconsulta.com" required>
         </div>
         <div class="form-group">
           <label>Senha</label>
@@ -154,7 +154,7 @@ $statusBg      = ['pendente'=>'#fff8e1','confirmado'=>'#e6faf9','cancelado'=>'#f
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Painel Admin — AnesConsulta</title>
+<title>Painel Admin — AnestConsulta</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
@@ -232,7 +232,7 @@ $statusBg      = ['pendente'=>'#fff8e1','confirmado'=>'#e6faf9','cancelado'=>'#f
 
 <div class="sidebar">
   <div class="sidebar-logo">
-    <h2>✚ AnesConsulta</h2>
+    <h2>✚ AnestConsulta</h2>
     <p>Painel Administrativo</p>
   </div>
   <nav class="sidebar-nav">
