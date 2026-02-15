@@ -108,6 +108,16 @@ if ($stmtDisp->fetchColumn() > 0) {
     exit;
 }
 
+// ── 4b. Mapear nome para ID caso frontend envie string ──
+$medico_nomes = [
+    'ricardo'  => 1, 'beatriz' => 2,
+    'paulo'    => 3, 'ana'     => 4,
+    'fernando' => 5
+];
+if ($medico_id === 0 && isset($input['medico']) && isset($medico_nomes[$input['medico']])) {
+    $medico_id = $medico_nomes[$input['medico']];
+}
+
 // ── 5. Buscar dados do médico ─────────────────
 $stmtMed = $db->prepare('SELECT * FROM medicos WHERE id = ? AND ativo = 1');
 $stmtMed->execute([$medico_id]);

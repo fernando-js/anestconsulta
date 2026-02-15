@@ -20,10 +20,11 @@ CREATE TABLE IF NOT EXISTS medicos (
 ) ENGINE=InnoDB;
 
 INSERT INTO medicos (nome, crm, especialidade, email) VALUES
-  ('Dr. Ricardo Mendes',   'CRM-SP 123456', 'Anestesia Geral',      'ricardo@anestconsulta.com'),
-  ('Dra. Beatriz Carvalho','CRM-SP 234567', 'Anestesia Pediátrica', 'beatriz@anestconsulta.com'),
-  ('Dr. Paulo Santos',     'CRM-SP 345678', 'Anestesia Cardíaca',   'paulo@anestconsulta.com'),
-  ('Dra. Ana Lima',        'CRM-SP 456789', 'Anestesia Obstétrica', 'ana@anestconsulta.com');
+  ('Dr. Ricardo Mendes',           'CRM-SP 123456', 'Anestesia Geral',      'ricardo@anestconsulta.com'),
+  ('Dra. Beatriz Carvalho',        'CRM-SP 234567', 'Anestesia Pediátrica', 'beatriz@anestconsulta.com'),
+  ('Dr. Paulo Santos',             'CRM-SP 345678', 'Anestesia Cardíaca',   'paulo@anestconsulta.com'),
+  ('Dra. Ana Lima',                'CRM-SP 456789', 'Anestesia Obstétrica', 'ana@anestconsulta.com'),
+  ('Dr. Fernando Xavier Ferreira', 'CRM-MG 30746',  'Anestesiologia',       'consulta@anestconsulta.com');
 
 -- ── Tabela principal de agendamentos ──────────
 CREATE TABLE IF NOT EXISTS agendamentos (
