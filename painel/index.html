@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Minha Conta — AnestConsulta</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal-900:#003d3b;--teal-800:#005451;--teal-700:#006e6a;
+  --teal-600:#008c87;--teal-500:#00a89f;--teal-400:#00c4ba;
+  --teal-100:#b3eee9;--teal-50:#e6faf9;
+  --blue-700:#003f9c;--blue-600:#0050b3;--blue-500:#1a6fc4;
+  --green-500:#229b61;--green-100:#d1fae5;
+  --red-500:#ef4444;--red-100:#fee2e2;
+  --yellow-500:#f59e0b;--yellow-100:#fef9c3;
+  --white:#fff;--off:#f4fbfb;
+  --gray-50:#f9fafb;--gray-100:#e8f0ef;--gray-200:#d0e1e0;
+  --gray-400:#7fa9a8;--gray-600:#3d6b6a;
+  --text:#0a2322;--text-mid:#1e4e4d;--text-light:#4a7f7e;
+  --shadow-sm:0 2px 8px rgba(0,60,56,.08);
+  --shadow-md:0 6px 24px rgba(0,60,56,.12);
+  --shadow-lg:0 16px 48px rgba(0,60,56,.18);
+  --r-sm:8px;--r-md:14px;--r-lg:20px;--r-xl:28px;--r-full:9999px;
+  --tr:all .25s cubic-bezier(.4,0,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Sora',sans-serif;background:var(--off);color:var(--text);
+     -webkit-font-smoothing:antialiased;min-height:100vh}
+
+/* ── AUTH PAGES ─────────────────────────────── */
+.auth-page{min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,var(--teal-900) 0%,var(--blue-700) 100%);
+  padding:20px;position:relative;overflow:hidden}
+.auth-page::before{content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(0,196,186,.05) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(0,196,186,.05) 1px,transparent 1px);
+  background-size:50px 50px}
+.auth-orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none}
+.auth-orb-1{width:400px;height:400px;background:radial-gradient(circle,rgba(0,168,159,.3),transparent 70%);
+  top:-100px;right:-100px}
+.auth-orb-2{width:300px;height:300px;background:radial-gradient(circle,rgba(26,111,196,.2),transparent 70%);
+  bottom:-50px;left:5%}
+
+.auth-card{background:white;border-radius:var(--r-xl);padding:48px 44px;
+  width:100%;max-width:440px;position:relative;z-index:2;
+  box-shadow:0 32px 80px rgba(0,0,0,.3)}
+.auth-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;
+  border-radius:var(--r-xl) var(--r-xl) 0 0;
+  background:linear-gradient(90deg,var(--teal-500),var(--blue-600),var(--teal-400));
+  background-size:200% auto;animation:gradientShift 3s linear infinite}
+@keyframes gradientShift{0%{background-position:0% center}100%{background-position:200% center}}
+
+.auth-logo{text-align:center;margin-bottom:32px}
+.auth-logo-icon{width:56px;height:56px;background:linear-gradient(135deg,var(--teal-600),var(--blue-600));
+  border-radius:14px;display:inline-flex;align-items:center;justify-content:center;
+  font-size:26px;color:white;margin-bottom:12px}
+.auth-logo h1{font-size:1.25rem;font-weight:700;color:var(--text)}
+.auth-logo p{font-size:.8rem;color:var(--text-light);margin-top:4px}
+
+.auth-tabs{display:flex;background:var(--off);border-radius:var(--r-sm);
+  padding:4px;margin-bottom:28px;gap:4px}
+.auth-tab{flex:1;padding:9px;border:none;border-radius:6px;font-family:'Sora',sans-serif;
+  font-size:.82rem;font-weight:600;cursor:pointer;transition:var(--tr);
+  background:transparent;color:var(--text-light)}
+.auth-tab.active{background:white;color:var(--teal-700);
+  box-shadow:0 2px 8px rgba(0,60,56,.1)}
+
+.form-label{display:block;font-size:.73rem;font-weight:600;
+  color:var(--text-mid);margin-bottom:6px;letter-spacing:.03em}
+.form-label span{color:var(--teal-500)}
+.form-group{margin-bottom:18px;position:relative}
+.form-input,.form-select{width:100%;padding:11px 14px;
+  background:var(--off);border:1.5px solid var(--gray-200);
+  border-radius:var(--r-sm);font-family:'Sora',sans-serif;
+  font-size:.84rem;color:var(--text);outline:none;transition:var(--tr)}
+.form-input:focus,.form-select:focus{border-color:var(--teal-500);
+  background:white;box-shadow:0 0 0 3px rgba(0,168,159,.1)}
+.form-input.erro{border-color:var(--red-500);box-shadow:0 0 0 3px rgba(239,68,68,.08)}
+.input-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  font-size:16px;cursor:pointer;color:var(--gray-400);user-select:none}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 24px;border-radius:var(--r-full);font-family:'Sora',sans-serif;
+  font-size:.88rem;font-weight:600;cursor:pointer;transition:var(--tr);
+  border:none;text-decoration:none;white-space:nowrap}
+.btn-primary{background:linear-gradient(135deg,var(--teal-600),var(--blue-600));
+  color:white;box-shadow:0 4px 16px rgba(0,140,135,.3);width:100%;
+  padding:13px;font-size:.9rem}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,140,135,.4)}
+.btn-primary:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.btn-outline{background:transparent;color:var(--teal-600);
+  border:1.5px solid var(--teal-200)}
+.btn-outline:hover{background:var(--teal-50);border-color:var(--teal-400)}
+.btn-danger{background:var(--red-100);color:var(--red-500);
+  border:1px solid #fca5a5}
+.btn-danger:hover{background:#fee2e2}
+.btn-sm{padding:7px 16px;font-size:.75rem}
+.btn-full{width:100%}
+
+.auth-divider{text-align:center;margin:16px 0;
+  font-size:.75rem;color:var(--gray-400);position:relative}
+.auth-divider::before,.auth-divider::after{content:'';position:absolute;
+  top:50%;width:42%;height:1px;background:var(--gray-200)}
+.auth-divider::before{left:0}
+.auth-divider::after{right:0}
+
+.auth-link{font-size:.78rem;color:var(--teal-600);cursor:pointer;
+  text-decoration:none;font-weight:500}
+.auth-link:hover{text-decoration:underline}
+
+/* ── PAINEL LAYOUT ──────────────────────────── */
+.painel{display:none;min-height:100vh}
+.painel.show{display:flex}
+
+.sidebar{width:260px;flex-shrink:0;background:linear-gradient(180deg,var(--teal-900),#001a3a);
+  display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar-header{padding:28px 24px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sidebar-brand{display:flex;align-items:center;gap:10px;
+  text-decoration:none;margin-bottom:20px}
+.sidebar-brand-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--teal-600),var(--blue-600));
+  border-radius:9px;display:flex;align-items:center;justify-content:center;
+  color:white;font-size:17px}
+.sidebar-brand-name{font-size:1rem;font-weight:700;color:white}
+.sidebar-brand-name span{color:var(--teal-400)}
+.sidebar-user{display:flex;align-items:center;gap:12px}
+.user-avatar{width:44px;height:44px;border-radius:50%;
+  background:linear-gradient(135deg,var(--teal-500),var(--blue-500));
+  display:flex;align-items:center;justify-content:center;
+  font-size:.95rem;font-weight:700;color:white;flex-shrink:0;
+  border:2px solid rgba(255,255,255,.2)}
+.user-name{font-size:.85rem;font-weight:600;color:white}
+.user-email{font-size:.7rem;color:rgba(255,255,255,.45);margin-top:1px}
+
+.sidebar-nav{flex:1;padding:16px 12px}
+.nav-item{display:flex;align-items:center;gap:11px;padding:11px 14px;
+  border-radius:var(--r-sm);color:rgba(255,255,255,.55);
+  font-size:.82rem;font-weight:500;cursor:pointer;
+  transition:var(--tr);margin-bottom:2px;user-select:none}
+.nav-item:hover{background:rgba(0,196,186,.1);color:rgba(255,255,255,.8)}
+.nav-item.active{background:rgba(0,196,186,.15);color:white}
+.nav-item-icon{font-size:17px;width:20px;text-align:center}
+.nav-badge{margin-left:auto;background:var(--teal-500);color:white;
+  font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:var(--r-full)}
+
+.sidebar-footer{padding:16px 24px;border-top:1px solid rgba(255,255,255,.08)}
+.logout-btn{display:flex;align-items:center;gap:8px;
+  font-size:.78rem;color:rgba(255,255,255,.4);cursor:pointer;
+  transition:var(--tr);background:none;border:none;font-family:'Sora',sans-serif;
+  width:100%;padding:8px 0}
+.logout-btn:hover{color:rgba(255,255,255,.8)}
+
+/* ── MAIN CONTENT ───────────────────────────── */
+.main{flex:1;overflow-x:hidden;min-width:0}
+.page{display:none;padding:36px}
+.page.active{display:block}
+
+.page-header{margin-bottom:28px}
+.page-title{font-family:'DM Serif Display',serif;font-size:1.7rem;
+  color:var(--text);letter-spacing:-.02em}
+.page-subtitle{font-size:.85rem;color:var(--text-light);margin-top:4px}
+
+/* Cards resumo */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:16px;margin-bottom:28px}
+.stat-card{background:white;border-radius:var(--r-lg);padding:20px 22px;
+  border:1px solid var(--gray-100);transition:var(--tr)}
+.stat-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.stat-num{font-size:1.8rem;font-weight:700;line-height:1;
+  font-family:'DM Serif Display',serif}
+.stat-label{font-size:.7rem;color:var(--text-light);margin-top:5px;
+  text-transform:uppercase;letter-spacing:.05em}
+
+/* Agendamento cards */
+.ag-list{display:flex;flex-direction:column;gap:14px}
+.ag-card{background:white;border-radius:var(--r-lg);padding:22px 24px;
+  border:1px solid var(--gray-100);transition:var(--tr);position:relative;
+  overflow:hidden}
+.ag-card:hover{box-shadow:var(--shadow-md);border-color:var(--teal-100)}
+.ag-card::before{content:'';position:absolute;left:0;top:0;bottom:0;
+  width:4px;border-radius:4px 0 0 4px}
+.ag-card.pendente::before{background:var(--yellow-500)}
+.ag-card.confirmado::before{background:var(--teal-500)}
+.ag-card.cancelado::before{background:var(--red-500)}
+.ag-card.realizado::before{background:var(--green-500)}
+
+.ag-header{display:flex;align-items:flex-start;justify-content:space-between;
+  gap:12px;margin-bottom:14px}
+.ag-medico{font-size:.95rem;font-weight:700;color:var(--text)}
+.ag-especialidade{font-size:.73rem;color:var(--text-light);margin-top:2px}
+.ag-status-badge{padding:4px 12px;border-radius:var(--r-full);
+  font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  flex-shrink:0}
+.badge-pendente{background:var(--yellow-100);color:#92400e}
+.badge-confirmado{background:var(--teal-50);color:var(--teal-700)}
+.badge-cancelado{background:var(--red-100);color:var(--red-500)}
+.badge-realizado{background:var(--green-100);color:var(--green-500)}
+
+.ag-info{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:16px}
+.ag-info-item{display:flex;align-items:center;gap:6px;
+  font-size:.8rem;color:var(--text-light)}
+.ag-info-item strong{color:var(--text);font-weight:600}
+
+.ag-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* Perfil */
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.profile-card{background:white;border-radius:var(--r-lg);padding:28px;
+  border:1px solid var(--gray-100)}
+.profile-avatar-section{text-align:center;margin-bottom:24px}
+.profile-avatar{width:80px;height:80px;border-radius:50%;margin:0 auto 12px;
+  background:linear-gradient(135deg,var(--teal-500),var(--blue-500));
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.8rem;font-weight:700;color:white;
+  border:3px solid var(--teal-100)}
+.profile-name{font-size:1.1rem;font-weight:700;color:var(--text)}
+.profile-email{font-size:.8rem;color:var(--text-light);margin-top:2px}
+.profile-since{font-size:.72rem;color:var(--gray-400);margin-top:6px}
+
+.section-title-sm{font-size:.8rem;font-weight:700;color:var(--text-mid);
+  text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px}
+.section-title-sm::before{content:'';width:20px;height:2px;
+  background:var(--teal-500);border-radius:2px}
+
+/* Filtros */
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.filter-btn{padding:7px 16px;border-radius:var(--r-full);font-size:.75rem;
+  font-weight:600;cursor:pointer;border:1.5px solid var(--gray-200);
+  color:var(--text-light);background:white;transition:var(--tr);
+  font-family:'Sora',sans-serif}
+.filter-btn:hover,.filter-btn.active{background:var(--teal-600);
+  border-color:var(--teal-600);color:white}
+
+/* Empty state */
+.empty-state{text-align:center;padding:60px 20px}
+.empty-state-icon{font-size:52px;margin-bottom:16px}
+.empty-state-title{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:8px}
+.empty-state-desc{font-size:.85rem;color:var(--text-light);margin-bottom:20px}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--teal-800);color:white;padding:12px 22px;
+  border-radius:var(--r-full);font-size:.83rem;font-weight:500;
+  box-shadow:var(--shadow-lg);z-index:2000;
+  display:flex;align-items:center;gap:8px;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  border:1px solid rgba(0,196,186,.3);white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.erro{background:#7f1d1d;border-color:rgba(239,68,68,.4)}
+
+/* Modal remarcar */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,35,33,.7);
+  backdrop-filter:blur(10px);z-index:1000;display:none;
+  align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:white;border-radius:var(--r-xl);padding:36px 32px;
+  max-width:420px;width:100%;box-shadow:var(--shadow-lg);
+  position:relative;overflow:hidden}
+.modal::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--teal-500),var(--blue-500))}
+.modal-title{font-size:1.1rem;font-weight:700;margin-bottom:6px;color:var(--text)}
+.modal-subtitle{font-size:.82rem;color:var(--text-light);margin-bottom:24px}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;
+  font-size:20px;cursor:pointer;color:var(--gray-400);line-height:1}
+.modal-close:hover{color:var(--text)}
+
+/* Loading spinner */
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);
+  border-top-color:white;border-radius:50%;animation:spin .7s linear infinite}
+
+/* Erro inline */
+.field-erro{font-size:.72rem;color:var(--red-500);margin-top:4px}
+
+/* Responsive */
+@media(max-width:768px){
+  .sidebar{position:fixed;left:-260px;z-index:100;transition:left .3s ease;height:100vh}
+  .sidebar.open{left:0}
+  .main{margin-left:0}
+  .profile-grid{grid-template-columns:1fr}
+  .page{padding:20px}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .mobile-header{display:flex !important}
+}
+.mobile-header{display:none;align-items:center;justify-content:space-between;
+  padding:16px 20px;background:white;border-bottom:1px solid var(--gray-100);
+  position:sticky;top:0;z-index:50}
+.hamburger{background:none;border:none;font-size:22px;cursor:pointer;color:var(--text)}
+</style>
+</head>
+<body>
+
+<!-- ══ AUTH PAGES ══════════════════════════════ -->
+<div id="authPage" class="auth-page">
+  <div class="auth-orb auth-orb-1"></div>
+  <div class="auth-orb auth-orb-2"></div>
+
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">✚</div>
+      <h1>AnestConsulta</h1>
+      <p id="authSubtitle">Acesse sua conta</p>
+    </div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="showTab('login')">Entrar</button>
+      <button class="auth-tab" onclick="showTab('registro')">Criar conta</button>
+    </div>
+
+    <!-- Login -->
+    <div id="loginForm">
+      <div class="form-group">
+        <label class="form-label">E-mail <span>*</span></label>
+        <input type="email" id="loginEmail" class="form-input" placeholder="seu@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Senha <span>*</span></label>
+        <div style="position:relative">
+          <input type="password" id="loginSenha" class="form-input" placeholder="••••••••"
+            onkeydown="if(event.key==='Enter')fazerLogin()">
+          <span class="input-icon" onclick="toggleSenha('loginSenha',this)">👁️</span>
+        </div>
+      </div>
+      <div style="text-align:right;margin-bottom:18px">
+        <span class="auth-link" onclick="showTab('reset')">Esqueci minha senha</span>
+      </div>
+      <button class="btn btn-primary" onclick="fazerLogin()" id="btnLogin">
+        Entrar na minha conta
+      </button>
+      <div style="text-align:center;margin-top:16px">
+        <span style="font-size:.78rem;color:var(--text-light)">Não tem conta? </span>
+        <span class="auth-link" onclick="showTab('registro')">Criar conta grátis</span>
+      </div>
+    </div>
+
+    <!-- Registro -->
+    <div id="registroForm" style="display:none">
+      <div class="form-group">
+        <label class="form-label">Nome completo <span>*</span></label>
+        <input type="text" id="regNome" class="form-input" placeholder="Maria da Silva">
+      </div>
+      <div class="form-group">
+        <label class="form-label">E-mail <span>*</span></label>
+        <input type="email" id="regEmail" class="form-input" placeholder="seu@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Senha <span>*</span></label>
+        <div style="position:relative">
+          <input type="password" id="regSenha" class="form-input"
+            placeholder="Min. 8 chars, 1 maiúsc. e 1 número">
+          <span class="input-icon" onclick="toggleSenha('regSenha',this)">👁️</span>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="fazerRegistro()" id="btnRegistro">
+        Criar minha conta
+      </button>
+      <div style="text-align:center;margin-top:14px">
+        <span class="auth-link" onclick="showTab('login')">← Voltar para o login</span>
+      </div>
+    </div>
+
+    <!-- Reset senha -->
+    <div id="resetForm" style="display:none">
+      <p style="font-size:.85rem;color:var(--text-light);margin-bottom:20px;line-height:1.6">
+        Informe seu e-mail cadastrado e enviaremos um link para redefinir sua senha.</p>
+      <div class="form-group">
+        <label class="form-label">E-mail <span>*</span></label>
+        <input type="email" id="resetEmail" class="form-input" placeholder="seu@email.com">
+      </div>
+      <button class="btn btn-primary" onclick="solicitarReset()" id="btnReset">
+        Enviar link de recuperação
+      </button>
+      <div style="text-align:center;margin-top:14px">
+        <span class="auth-link" onclick="showTab('login')">← Voltar</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAINEL ══════════════════════════════════ -->
+<div id="painel" class="painel">
+
+  <!-- Mobile header -->
+  <div class="mobile-header">
+    <button class="hamburger" onclick="toggleSidebar()">☰</button>
+    <span style="font-weight:700;color:var(--text)">AnestConsulta</span>
+    <div id="mobileAvatar" class="user-avatar" style="width:34px;height:34px;font-size:.75rem"></div>
+  </div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="/" class="sidebar-brand">
+        <div class="sidebar-brand-icon">✚</div>
+        <span class="sidebar-brand-name">Anest<span>Consulta</span></span>
+      </a>
+      <div class="sidebar-user">
+        <div class="user-avatar" id="sidebarAvatar"></div>
+        <div>
+          <div class="user-name" id="sidebarNome"></div>
+          <div class="user-email" id="sidebarEmail"></div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-item active" onclick="showPage('dashboard')">
+        <span class="nav-item-icon">🏠</span> Início
+      </div>
+      <div class="nav-item" onclick="showPage('agendamentos')">
+        <span class="nav-item-icon">📋</span> Meus Agendamentos
+        <span class="nav-badge" id="navBadge" style="display:none"></span>
+      </div>
+      <div class="nav-item" onclick="showPage('perfil')">
+        <span class="nav-item-icon">👤</span> Meu Perfil
+      </div>
+      <div class="nav-item" onclick="window.location.href='/'">
+        <span class="nav-item-icon">📅</span> Novo Agendamento
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="fazerLogout()">
+        <span>🚪</span> Sair da conta
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- Dashboard -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div class="page-title">Olá, <span id="dashNome">Paciente</span>! 👋</div>
+        <div class="page-subtitle">Aqui está um resumo da sua conta.</div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-num" id="statTotal" style="color:var(--text)">—</div>
+          <div class="stat-label">Total de consultas</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="statPendentes" style="color:var(--yellow-500)">—</div>
+          <div class="stat-label">Pendentes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="statConfirmados" style="color:var(--teal-600)">—</div>
+          <div class="stat-label">Confirmadas</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="statRealizados" style="color:var(--green-500)">—</div>
+          <div class="stat-label">Realizadas</div>
+        </div>
+      </div>
+
+      <!-- Próximas consultas -->
+      <div style="background:white;border-radius:var(--r-lg);padding:28px;
+        border:1px solid var(--gray-100)">
+        <div class="section-title-sm">Próximas consultas</div>
+        <div id="proximasConsultas">
+          <div style="text-align:center;padding:24px;color:var(--text-light);font-size:.85rem">
+            Carregando...
+          </div>
+        </div>
+        <div style="margin-top:16px">
+          <button class="btn btn-outline btn-sm" onclick="showPage('agendamentos')">
+            Ver todos os agendamentos →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Agendamentos -->
+    <div class="page" id="page-agendamentos">
+      <div class="page-header" style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div class="page-title">Meus Agendamentos</div>
+          <div class="page-subtitle">Gerencie suas consultas pré-anestésicas</div>
+        </div>
+        <a href="/" class="btn btn-primary btn-sm" style="width:auto">
+          + Novo agendamento
+        </a>
+      </div>
+
+      <div class="filter-row">
+        <button class="filter-btn active" onclick="filtrarAg('todos',this)">Todos</button>
+        <button class="filter-btn" onclick="filtrarAg('pendente',this)">Pendentes</button>
+        <button class="filter-btn" onclick="filtrarAg('confirmado',this)">Confirmados</button>
+        <button class="filter-btn" onclick="filtrarAg('realizado',this)">Realizados</button>
+        <button class="filter-btn" onclick="filtrarAg('cancelado',this)">Cancelados</button>
+      </div>
+
+      <div id="agList" class="ag-list">
+        <div style="text-align:center;padding:32px;color:var(--text-light)">Carregando...</div>
+      </div>
+    </div>
+
+    <!-- Perfil -->
+    <div class="page" id="page-perfil">
+      <div class="page-header">
+        <div class="page-title">Meu Perfil</div>
+        <div class="page-subtitle">Gerencie seus dados pessoais</div>
+      </div>
+
+      <div class="profile-grid">
+        <!-- Card avatar/info -->
+        <div class="profile-card">
+          <div class="profile-avatar-section">
+            <div class="profile-avatar" id="profileAvatar"></div>
+            <div class="profile-name" id="profileNome"></div>
+            <div class="profile-email" id="profileEmail"></div>
+            <div class="profile-since" id="profileSince"></div>
+          </div>
+
+          <div class="section-title-sm">Estatísticas</div>
+          <div style="display:flex;flex-direction:column;gap:8px" id="profileStats"></div>
+        </div>
+
+        <!-- Formulário edição -->
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="profile-card">
+            <div class="section-title-sm">Dados Pessoais</div>
+            <div class="form-group">
+              <label class="form-label">Nome completo</label>
+              <input type="text" id="editNome" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Telefone</label>
+              <input type="tel" id="editTelefone" class="form-input" placeholder="(31) 99999-9999"
+                oninput="mascaraTel(this)">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Data de nascimento</label>
+              <input type="date" id="editNascimento" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Plano de saúde</label>
+              <select id="editPlano" class="form-select">
+                <option value="">Particular / Sem plano</option>
+                <option value="amil">Amil</option>
+                <option value="unimed">Unimed</option>
+                <option value="bradesco">Bradesco Saúde</option>
+                <option value="hapvida">Hapvida</option>
+                <option value="sulamerica">SulAmérica</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" onclick="salvarPerfil()" id="btnSalvarPerfil">
+              Salvar alterações
+            </button>
+          </div>
+
+          <!-- Trocar senha -->
+          <div class="profile-card">
+            <div class="section-title-sm">Segurança</div>
+            <div class="form-group">
+              <label class="form-label">Senha atual</label>
+              <input type="password" id="senhaAtual" class="form-input" placeholder="••••••••">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nova senha</label>
+              <input type="password" id="novaSenha" class="form-input"
+                placeholder="Min. 8 chars, 1 maiúsc. e 1 número">
+            </div>
+            <button class="btn btn-outline btn-full" onclick="trocarSenha()">
+              🔐 Alterar senha
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Modal remarcar -->
+<div class="modal-overlay" id="modalRemarcar">
+  <div class="modal">
+    <button class="modal-close" onclick="fecharModal()">×</button>
+    <div class="modal-title">📅 Remarcar Consulta</div>
+    <div class="modal-subtitle">Escolha a nova data e horário disponíveis.</div>
+    <input type="hidden" id="remarcarId">
+    <div class="form-group">
+      <label class="form-label">Nova data <span>*</span></label>
+      <input type="date" id="remarcarData" class="form-input">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Novo horário <span>*</span></label>
+      <select id="remarcarHorario" class="form-select">
+        <option value="">Selecione</option>
+        <option value="08:00">08:00</option>
+        <option value="09:00">09:00</option>
+        <option value="10:00">10:00</option>
+        <option value="11:00">11:00</option>
+        <option value="14:00">14:00</option>
+        <option value="15:00">15:00</option>
+        <option value="16:00">16:00</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:4px">
+      <button class="btn btn-outline btn-full" onclick="fecharModal()">Cancelar</button>
+      <button class="btn btn-primary" style="width:auto;flex:1" onclick="confirmarRemarcar()">
+        Confirmar remarcação
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<script>
+const API = {
+  auth:  'painel/auth.php',
+  ags:   'painel/meus-agendamentos.php',
+  perf:  'painel/perfil.php',
+};
+
+let tokenSessao = localStorage.getItem('anest_token') || '';
+let dadosPaciente = JSON.parse(localStorage.getItem('anest_paciente') || 'null');
+let todosAgendamentos = [];
+let filtroAtual = 'todos';
+
+// ══ INIT ════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  // Verificar e-mail via URL
+  const params = new URLSearchParams(location.search);
+  if (params.get('verificar')) verificarEmail(params.get('verificar'));
+  if (params.get('reset'))     showTab('nova_senha', params.get('reset'));
+
+  if (tokenSessao && dadosPaciente) {
+    entrarNoPainel();
+  }
+
+  // Data mínima no modal
+  const hoje = new Date();
+  hoje.setDate(hoje.getDate() + 2);
+  document.getElementById('remarcarData').min = hoje.toISOString().split('T')[0];
+});
+
+// ══ AUTH TABS ═══════════════════════════════════
+function showTab(tab, extra) {
+  ['login','registro','reset'].forEach(t => {
+    const el = document.getElementById(t + 'Form');
+    if (el) el.style.display = 'none';
+  });
+  const subtitles = {
+    login:'Acesse sua conta',registro:'Crie sua conta gratuita',
+    reset:'Recuperar senha',nova_senha:'Redefinir senha'
+  };
+  document.getElementById('authSubtitle').textContent = subtitles[tab] || '';
+  document.querySelectorAll('.auth-tab').forEach((t,i) => {
+    t.classList.toggle('active', (i===0&&tab==='login')||(i===1&&tab==='registro'));
+  });
+  const f = document.getElementById(tab+'Form');
+  if (f) f.style.display = 'block';
+}
+
+function toggleSenha(id, el) {
+  const inp = document.getElementById(id);
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  el.textContent = inp.type === 'password' ? '👁️' : '🙈';
+}
+
+// ══ LOGIN ════════════════════════════════════════
+async function fazerLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const senha = document.getElementById('loginSenha').value;
+  if (!email || !senha) { showToast('⚠️ Preencha e-mail e senha.', true); return; }
+
+  setBtnLoading('btnLogin', true, 'Entrando...');
+  try {
+    const res  = await apiPost(API.auth + '?action=login', { email, senha });
+    tokenSessao   = res.token;
+    dadosPaciente = res.paciente;
+    localStorage.setItem('anest_token',    tokenSessao);
+    localStorage.setItem('anest_paciente', JSON.stringify(dadosPaciente));
+    entrarNoPainel();
+  } catch(e) {
+    showToast('❌ ' + e.message, true);
+  } finally {
+    setBtnLoading('btnLogin', false, 'Entrar na minha conta');
+  }
+}
+
+// ══ REGISTRO ═════════════════════════════════════
+async function fazerRegistro() {
+  const nome  = document.getElementById('regNome').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const senha = document.getElementById('regSenha').value;
+
+  if (!nome || !email || !senha) { showToast('⚠️ Preencha todos os campos.', true); return; }
+
+  setBtnLoading('btnRegistro', true, 'Criando conta...');
+  try {
+    await apiPost(API.auth + '?action=registro', { nome, email, senha });
+    showToast('✅ Conta criada! Verifique seu e-mail para ativar.');
+    showTab('login');
+  } catch(e) {
+    showToast('❌ ' + e.message, true);
+  } finally {
+    setBtnLoading('btnRegistro', false, 'Criar minha conta');
+  }
+}
+
+// ══ RESET SENHA ══════════════════════════════════
+async function solicitarReset() {
+  const email = document.getElementById('resetEmail').value.trim();
+  if (!email) { showToast('⚠️ Informe seu e-mail.', true); return; }
+
+  setBtnLoading('btnReset', true, 'Enviando...');
+  try {
+    await apiPost(API.auth + '?action=reset_solicitar', { email });
+    showToast('📧 Verifique seu e-mail!');
+    showTab('login');
+  } catch(e) {
+    showToast('❌ ' + e.message, true);
+  } finally {
+    setBtnLoading('btnReset', false, 'Enviar link de recuperação');
+  }
+}
+
+async function verificarEmail(token) {
+  try {
+    await apiPost(API.auth + '?action=verificar_email', { token });
+    showToast('✅ E-mail verificado! Faça login.');
+  } catch(e) {
+    showToast('❌ Link inválido ou expirado.', true);
+  }
+  history.replaceState({}, '', location.pathname);
+}
+
+// ══ PAINEL ═══════════════════════════════════════
+function entrarNoPainel() {
+  document.getElementById('authPage').style.display  = 'none';
+  document.getElementById('painel').classList.add('show');
+
+  const n = dadosPaciente.nome.split(' ')[0];
+  document.getElementById('sidebarNome').textContent  = dadosPaciente.nome;
+  document.getElementById('sidebarEmail').textContent = dadosPaciente.email;
+  document.getElementById('sidebarAvatar').textContent= dadosPaciente.avatar_inicial || '👤';
+  document.getElementById('mobileAvatar').textContent = dadosPaciente.avatar_inicial || '👤';
+  document.getElementById('dashNome').textContent     = n;
+
+  carregarPerfil();
+  carregarAgendamentos();
+}
+
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  const nav = document.querySelector(`.nav-item[onclick*="${page}"]`);
+  if (nav) nav.classList.add('active');
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+async function fazerLogout() {
+  try { await apiPost(API.auth + '?action=logout', { token: tokenSessao }); } catch(e) {}
+  localStorage.removeItem('anest_token');
+  localStorage.removeItem('anest_paciente');
+  tokenSessao = ''; dadosPaciente = null;
+  document.getElementById('painel').classList.remove('show');
+  document.getElementById('authPage').style.display = 'flex';
+  showToast('👋 Até logo!');
+}
+
+// ══ AGENDAMENTOS ══════════════════════════════════
+async function carregarAgendamentos() {
+  try {
+    const res = await apiGet(API.ags);
+    todosAgendamentos = res.agendamentos || [];
+    renderAgendamentos(todosAgendamentos);
+
+    // Badge pendentes
+    const pend = todosAgendamentos.filter(a => a.status === 'pendente').length;
+    const badge = document.getElementById('navBadge');
+    badge.style.display = pend > 0 ? 'inline' : 'none';
+    badge.textContent = pend;
+
+    // Dashboard stats
+    const stats = { total:0, pendentes:0, confirmados:0, realizados:0 };
+    todosAgendamentos.forEach(a => {
+      stats.total++;
+      if (a.status === 'pendente')   stats.pendentes++;
+      if (a.status === 'confirmado') stats.confirmados++;
+      if (a.status === 'realizado')  stats.realizados++;
+    });
+    document.getElementById('statTotal').textContent      = stats.total;
+    document.getElementById('statPendentes').textContent  = stats.pendentes;
+    document.getElementById('statConfirmados').textContent= stats.confirmados;
+    document.getElementById('statRealizados').textContent = stats.realizados;
+
+    // Próximas no dashboard
+    const proximas = todosAgendamentos
+      .filter(a => a.status !== 'cancelado' && new Date(a.data_consulta) >= new Date())
+      .slice(0, 3);
+    const el = document.getElementById('proximasConsultas');
+    if (proximas.length === 0) {
+      el.innerHTML = `<div class="empty-state">
+        <div class="empty-state-icon">📅</div>
+        <div class="empty-state-title">Nenhuma consulta agendada</div>
+        <div class="empty-state-desc">Agende sua consulta pré-anestésica</div>
+        <a href="/" class="btn btn-primary btn-sm" style="width:auto">Agendar agora</a>
+      </div>`;
+    } else {
+      el.innerHTML = proximas.map(a => miniCardAg(a)).join('');
+    }
+  } catch(e) {
+    showToast('❌ Erro ao carregar agendamentos.', true);
+  }
+}
+
+function renderAgendamentos(lista) {
+  const el = document.getElementById('agList');
+  if (!lista.length) {
+    el.innerHTML = `<div class="empty-state">
+      <div class="empty-state-icon">📋</div>
+      <div class="empty-state-title">Nenhum agendamento encontrado</div>
+      <div class="empty-state-desc">Você ainda não tem consultas nesta categoria.</div>
+      <a href="/" class="btn btn-primary btn-sm" style="width:auto">+ Agendar consulta</a>
+    </div>`;
+    return;
+  }
+  el.innerHTML = lista.map(a => cardAgendamento(a)).join('');
+}
+
+function filtrarAg(status, btn) {
+  filtroAtual = status;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const lista = status === 'todos'
+    ? todosAgendamentos
+    : todosAgendamentos.filter(a => a.status === status);
+  renderAgendamentos(lista);
+}
+
+function cardAgendamento(a) {
+  const tipo = a.tipo_consulta === 'online' ? '💻 Telemedicina' : '🏥 Presencial';
+  const acoes = [];
+  if (a.pode_remarcar) acoes.push(
+    `<button class="btn btn-outline btn-sm" onclick="abrirRemarcar(${a.id})">📅 Remarcar</button>`);
+  if (a.pode_cancelar) acoes.push(
+    `<button class="btn btn-danger btn-sm" onclick="cancelarAg(${a.id})">✕ Cancelar</button>`);
+
+  return `<div class="ag-card ${a.status}">
+    <div class="ag-header">
+      <div>
+        <div class="ag-medico">${a.medico_nome}</div>
+        <div class="ag-especialidade">${a.especialidade} · ${a.crm}</div>
+      </div>
+      <span class="ag-status-badge badge-${a.status}">${a.status}</span>
+    </div>
+    <div class="ag-info">
+      <div class="ag-info-item">📅 <strong>${a.data_formatada}</strong></div>
+      <div class="ag-info-item">🕐 <strong>${a.horario_fmt}</strong></div>
+      <div class="ag-info-item">${tipo}</div>
+      <div class="ag-info-item">🔬 ${a.cirurgia}</div>
+    </div>
+    ${acoes.length ? `<div class="ag-actions">${acoes.join('')}</div>` : ''}
+  </div>`;
+}
+
+function miniCardAg(a) {
+  return `<div style="display:flex;align-items:center;gap:14px;padding:12px 0;
+    border-bottom:1px solid var(--gray-100)">
+    <div style="width:44px;height:44px;border-radius:var(--r-sm);flex-shrink:0;
+      background:var(--teal-50);display:flex;align-items:center;
+      justify-content:center;font-size:20px">🩺</div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:.85rem;font-weight:600;color:var(--text)">${a.medico_nome}</div>
+      <div style="font-size:.73rem;color:var(--text-light);margin-top:2px">
+        ${a.data_formatada} · ${a.horario_fmt}</div>
+    </div>
+    <span class="ag-status-badge badge-${a.status}">${a.status}</span>
+  </div>`;
+}
+
+// ══ CANCELAR ══════════════════════════════════════
+async function cancelarAg(id) {
+  if (!confirm('Tem certeza que deseja cancelar este agendamento?')) return;
+  try {
+    await apiPost(API.ags + '?action=cancelar', { id });
+    showToast('✅ Agendamento cancelado.');
+    carregarAgendamentos();
+  } catch(e) {
+    showToast('❌ ' + e.message, true);
+  }
+}
+
+// ══ REMARCAR ══════════════════════════════════════
+function abrirRemarcar(id) {
+  document.getElementById('remarcarId').value = id;
+  document.getElementById('remarcarData').value = '';
+  document.getElementById('remarcarHorario').value = '';
+  document.getElementById('modalRemarcar').classList.add('show');
+}
+function fecharModal() {
+  document.getElementById('modalRemarcar').classList.remove('show');
+}
+async function confirmarRemarcar() {
+  const id      = document.getElementById('remarcarId').value;
+  const data    = document.getElementById('remarcarData').value;
+  const horario = document.getElementById('remarcarHorario').value;
+  if (!data || !horario) { showToast('⚠️ Preencha data e horário.', true); return; }
+  try {
+    await apiPost(API.ags + '?action=remarcar', { id: +id, data, horario });
+    showToast('✅ Consulta remarcada com sucesso!');
+    fecharModal();
+    carregarAgendamentos();
+  } catch(e) {
+    showToast('❌ ' + e.message, true);
+  }
+}
+
+// ══ PERFIL ════════════════════════════════════════
+async function carregarPerfil() {
+  try {
+    const res = await apiGet(API.perf);
+    const p   = res.paciente;
+    const s   = res.estatisticas;
+
+    document.getElementById('profileAvatar').textContent = p.avatar_inicial || '👤';
+    document.getElementById('profileNome').textContent   = p.nome;
+    document.getElementById('profileEmail').textContent  = p.email;
+    document.getElementById('profileSince').textContent  =
+      'Membro desde ' + new Date(p.created_at).toLocaleDateString('pt-BR',
+      {month:'long',year:'numeric'});
+
+    document.getElementById('editNome').value       = p.nome || '';
+    document.getElementById('editTelefone').value   = p.telefone || '';
+    document.getElementById('editNascimento').value = p.data_nascimento || '';
+    document.getElementById('editPlano').value      = p.plano_saude || '';
+
+    document.getElementById('profileStats').innerHTML = `
+      <div style="display:flex;justify-content:space-between;font-size:.82rem;
+        padding:8px 0;border-bottom:1px solid var(--gray-100)">
+        <span style="color:var(--text-light)">Total de consultas</span>
+        <strong>${s.total}</strong>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:.82rem;
+        padding:8px 0;border-bottom:1px solid var(--gray-100)">
+        <span style="color:var(--text-light)">Pendentes</span>
+        <strong style="color:var(--yellow-500)">${s.pendentes}</strong>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:.82rem;
+        padding:8px 0">
+        <span style="color:var(--text-light)">Realizadas</span>
+        <strong style="color:var(--green-500)">${s.realizados}</strong>
+      </div>`;
+  } catch(e) {}
+}
+
+async function salvarPerfil() {
+  setBtnLoading('btnSalvarPerfil', true, 'Salvando...');
+  try {
+    await apiPost(API.perf, {
+      nome:            document.getElementById('editNome').value,
+      telefone:        document.getElementById('editTelefone').value,
+      data_nascimento: document.getElementById('editNascimento').value,
+      plano_saude:     document.getElementById('editPlano').value,
+    });
+    showToast('✅ Perfil atualizado!');
+    carregarPerfil();
+  } catch(e) {
+    showToast('❌ ' + e.message, true);
+  } finally {
+    setBtnLoading('btnSalvarPerfil', false, 'Salvar alterações');
+  }
+}
+
+async function trocarSenha() {
+  const sa = document.getElementById('senhaAtual').value;
+  const sn = document.getElementById('novaSenha').value;
+  if (!sa || !sn) { showToast('⚠️ Preencha os campos de senha.', true); return; }
+  try {
+    await apiPost(API.perf + '?action=senha', { senha_atual: sa, nova_senha: sn });
+    showToast('✅ Senha alterada com sucesso!');
+    document.getElementById('senhaAtual').value = '';
+    document.getElementById('novaSenha').value  = '';
+  } catch(e) {
+    showToast('❌ ' + e.message, true);
+  }
+}
+
+// ══ HELPERS ═══════════════════════════════════════
+async function apiGet(url) {
+  const res = await fetch(url, {
+    headers: { 'Authorization': 'Bearer ' + tokenSessao }
+  });
+  const data = await res.json();
+  if (!data.ok) throw new Error(data.error?.message || 'Erro na requisição');
+  return data;
+}
+
+async function apiPost(url, body) {
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + tokenSessao
+    },
+    body: JSON.stringify(body)
+  });
+  const data = await res.json();
+  if (!data.ok) throw new Error(data.error?.message || 'Erro na requisição');
+  return data;
+}
+
+function setBtnLoading(id, loading, texto) {
+  const btn = document.getElementById(id);
+  if (!btn) return;
+  btn.disabled = loading;
+  btn.innerHTML = loading
+    ? `<div class="spinner"></div> ${texto}`
+    : texto;
+}
+
+function showToast(msg, erro = false) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.className = 'toast' + (erro ? ' erro' : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+function mascaraTel(el) {
+  let v = el.value.replace(/\D/g,'');
+  if (v.length > 11) v = v.slice(0,11);
+  v = v.replace(/^(\d{2})(\d)/,'($1) $2');
+  v = v.replace(/(\d{5})(\d{4})$/,'$1-$2');
+  el.value = v;
+}
+
+// Fechar modal clicando fora
+document.getElementById('modalRemarcar').addEventListener('click', function(e) {
+  if (e.target === this) fecharModal();
+});
+</script>
+</body>
+</html>
